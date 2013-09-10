@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>HTML5 Pedometer</title>
+		<script>
+			var oldAcceleration = [0, 0, 0];
+			var isChange = 0;
+			var stepCount = 0;
+
+			init();
+
+			function init(){
+				if (window.DeviceMotionEvent) {
+	  				window.addEventListener('devicemotion', deviceMotionHandler, false);
+				} else {
+					console.log('This device does not support Device Motion');
+				}
+			}
+			
+			function deviceMotionHandler(eventData) {
+				var info, xyz = "[X, Y, Z]";
+
+				// Grab the acceleration from the results
+				var acceleration = eventData.acceleration;
+				info = xyz.replace("X", acceleration.x);
+				info = info.replace("Y", acceleration.y);
+				info = info.replace("Z", acceleration.z);
+				document.getElementById("moAccel").innerHTML = info;
+
+				// Grab the acceleration including gravity from the results
+				acceleration = eventData.accelerationIncludingGravity;
+				info = xyz.replace("X", acceleration.x);
+				info = info.replace("Y", acceleration.y);
+				info = info.replace("Z", acceleration.z);
+				document.getElementById("moAccelGrav").innerHTML = info;
+
+				// Grab the rotation rate from the results
+				var rotation = eventData.rotationRate;
+				info = xyz.replace("X", rotation.alpha);
+				info = info.replace("Y", rotation.beta);
+				info = info.replace("Z", rotation.gamma);
+				document.getElementById("moRotation").innerHTML = info;
+
+				// // Grab the refresh interval from the results
+				info = eventData.interval;
+				document.getElementById("moInterval").innerHTML = info;   
+
+				// compare with old acceleration
+				var dot = 	(oldAcceleration.x * acceleration.x) +
+							(oldAcceleration.y * acceleration.y) +
+							(oldAcceleration.z * acceleration.z);
+
+				var a = Math.abs(Math.sqrt(		Math.pow(oldAcceleration.x,2) +
+												Math.pow(oldAcceleration.y,2) +
+												Math.pow(oldAcceleration.z,2)));
+
+				var b = Math.abs(Math.sqrt(		Math.pow(acceleration.x,2) +
+												Math.pow(acceleration.y,2) +
+												Math.pow(acceleration.z,2)));
+
+				dot /= (a * b);
+
+				console.log(dot);
+
+				if(dot <= 0.994 && dot > 0.90){ //bounce
+					//console.log("bounce");
+					//console.log("step count: " + stepCount + ", isChange: " + isChange);
+					if(isChange == 0){
+						stepCount+=1;
+					} else {
+						if(isChange == 3){
+							isChange = -1;
+						}
+					}
+					isChange+=1;
+				}
+				// set old acceleration to current
+				oldAcceleration = acceleration;    
+
+				// display step count
+				document.getElementById("moStepCount").innerHTML = stepCount;
+			}
+		</script>
+		<style>
+		</style>
+	</head>	
+	<body>
+		<div class="main">
+			<h2>Device Motion</h2>
+			<table>
+				<tr>
+				  	<td>Event Supported</td>
+					<td id="dmEvent"></td>
+				</tr>
+				<tr>
+				  	<td>acceleration</td>
+				  	<td id="moAccel"></td>
+				</tr>
+				<tr>
+				  	<td>accelerationIncludingGravity</td>
+				  	<td id="moAccelGrav"></td>
+				</tr>
+				<tr>
+				  	<td>rotationRate</td>
+				  	<td id="moRotation"></td>
+				</tr>
+				<tr>
+				  	<td>interval</td>
+				  	<td id="moInterval"></td>
+				</tr>
+				<tr>
+					<td>step count</td>
+					<td id="moStepCount"></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>
