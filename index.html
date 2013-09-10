@@ -3,11 +3,15 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=320, initial-scale=1, user-scalable=no"/>
 		<title>HTML5 Pedometer</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+    	<script type="text/javascript" src="/jquery.easyui.min.js"></script>
 		<script>
 			var oldAcceleration = [0, 0, 0];
 			var isChange = 0;
 			var stepCount = 0;
+			var scrollAmount = 30;
 
 			init();
 
@@ -27,25 +31,25 @@
 				info = xyz.replace("X", acceleration.x);
 				info = info.replace("Y", acceleration.y);
 				info = info.replace("Z", acceleration.z);
-				document.getElementById("moAccel").innerHTML = info;
+				//document.getElementById("moAccel").innerHTML = info;
 
 				// Grab the acceleration including gravity from the results
 				acceleration = eventData.accelerationIncludingGravity;
 				info = xyz.replace("X", acceleration.x);
 				info = info.replace("Y", acceleration.y);
 				info = info.replace("Z", acceleration.z);
-				document.getElementById("moAccelGrav").innerHTML = info;
+				//document.getElementById("moAccelGrav").innerHTML = info;
 
 				// Grab the rotation rate from the results
 				var rotation = eventData.rotationRate;
 				info = xyz.replace("X", rotation.alpha);
 				info = info.replace("Y", rotation.beta);
 				info = info.replace("Z", rotation.gamma);
-				document.getElementById("moRotation").innerHTML = info;
+				//document.getElementById("moRotation").innerHTML = info;
 
 				// // Grab the refresh interval from the results
 				info = eventData.interval;
-				document.getElementById("moInterval").innerHTML = info;   
+				//document.getElementById("moInterval").innerHTML = info;   
 
 				// compare with old acceleration
 				var dot = 	(oldAcceleration.x * acceleration.x) +
@@ -62,13 +66,14 @@
 
 				dot /= (a * b);
 
-				console.log(dot);
+				//console.log(dot);
 
 				if(dot <= 0.994 && dot > 0.90){ //bounce
 					//console.log("bounce");
 					//console.log("step count: " + stepCount + ", isChange: " + isChange);
 					if(isChange == 0){
 						stepCount+=1;
+						stepDetected();
 					} else {
 						if(isChange == 3){
 							isChange = -1;
@@ -82,39 +87,778 @@
 				// display step count
 				document.getElementById("moStepCount").innerHTML = stepCount;
 			}
+
+			function stepDetected(){
+				var s = $('body').scrollTop();
+				console.log(s);
+				s += 80;
+				$('body').animate({
+					scrollTop: "+=" + scrollAmount
+				}, 500);
+			}
+
 		</script>
+   		<link rel="stylesheet" type="text/css" href="../../themes/default/easyui.css">
+    	<link rel="stylesheet" type="text/css" href="../../themes/icon.css">
 		<style>
+			html, body { width: 320px; margin: 0; padding: 0; }
+			h2, h3 { padding: 0 10px; }
+			p { font-size: 18px; line-height: 1.2em; margin-left: 0; margin-right: 0; padding: 0 10px; }
+			.slider { margin-left: 20px; margin-bottom: 40px; }
+			.tabs-panels { overflow: none; }
 		</style>
 	</head>	
 	<body>
 		<div class="main">
-			<h2>Device Motion</h2>
-			<table>
-				<tr>
-				  	<td>Event Supported</td>
-					<td id="dmEvent"></td>
-				</tr>
-				<tr>
-				  	<td>acceleration</td>
-				  	<td id="moAccel"></td>
-				</tr>
-				<tr>
-				  	<td>accelerationIncludingGravity</td>
-				  	<td id="moAccelGrav"></td>
-				</tr>
-				<tr>
-				  	<td>rotationRate</td>
-				  	<td id="moRotation"></td>
-				</tr>
-				<tr>
-				  	<td>interval</td>
-				  	<td id="moInterval"></td>
-				</tr>
-				<tr>
-					<td>step count</td>
-					<td id="moStepCount"></td>
-				</tr>
-			</table>
+			<h2>HTML5 Pedometer Scrolling</h2>
+			<p>Choose a story and start walking. If you find the text scrolling too fast or too slowly, adjust the Scroll Pace.</p>
+			<h3>Step Count: <span id="moStepCount"></span></h3>
+			<h3>Scroll Pace</h3>
+			<input class="easyui-slider" value="30" style="width:280px" data-options="
+				showTip:true,
+				rule: [0,'|',25,'|',50,'|',75,'|',100],
+				tipFormatter: function(value){
+                    return value+'px';
+                },
+                onChange: function(value){
+                    scrollAmount = value;
+                }
+			">
+		</div>
+		<div class="easyui-tabs" style="width:320px;height:auto">
+		<div title="The NSA" class="copy" id="nsa">
+			<p>By Shane Harris for foreignpolicy.com</p>
+			<p>On Aug. 1, 2005, Lt. Gen. Keith Alexander reported for duty as the 16th director of the National Security Agency, the United States' largest intelligence organization. He seemed perfect for the job. Alexander was a decorated Army intelligence officer and a West Point graduate with master's degrees in systems technology and physics. He had run intelligence operations in combat and had held successive senior-level positions, most recently as the director of an Army intelligence organization and then as the service's overall chief of intelligence. He was both a soldier and a spy, and he had the heart of a tech geek. Many of his peers thought Alexander would make a perfect NSA director. But one prominent person thought otherwise: the prior occupant of that office.</p>
+
+			<p>Air Force Gen. Michael Hayden had been running the NSA since 1999, through the 9/11 terrorist attacks and into a new era that found the global eavesdropping agency increasingly focused on Americans' communications inside the United States. At times, Hayden had found himself swimming in the murkiest depths of the law, overseeing programs that other senior officials in government thought violated the Constitution. Now Hayden of all people was worried that Alexander didn't understand the legal sensitivities of that new mission.</p>
+
+			<p>"Alexander tended to be a bit of a cowboy: 'Let's not worry about the law. Let's just figure out how to get the job done,'" says a former intelligence official who has worked with both men. "That caused General Hayden some heartburn."</p>
+
+			<p>The heartburn first flared up not long after the 2001 terrorist attacks. Alexander was the general in charge of the Army's Intelligence and Security Command (INSCOM) at Fort Belvoir, Virginia. He began insisting that the NSA give him raw, unanalyzed data about suspected terrorists from the agency's massive digital cache, according to three former intelligence officials. Alexander had been building advanced data-mining software and analytic tools, and now he wanted to run them against the NSA's intelligence caches to try to find terrorists who were in the United States or planning attacks on the homeland.</p>
+
+			<p>By law, the NSA had to scrub intercepted communications of most references to U.S. citizens before those communications can be shared with other agencies. But Alexander wanted the NSA "to bend the pipe towards him," says one of the former officials, so that he could siphon off metadata, the digital records of phone calls and email traffic that can be used to map out a terrorist organization based on its members' communications patterns.</p>
+
+			<p>"Keith wanted his hands on the raw data. And he bridled at the fact that NSA didn't want to release the information until it was properly reviewed and in a report," says a former national security official. "He felt that from a tactical point of view, that was often too late to be useful."</p>
+
+			<p>Hayden thought Alexander was out of bounds. INSCOM was supposed to provide battlefield intelligence for troops and special operations forces overseas, not use raw intelligence to find terrorists within U.S. borders. But Alexander had a more expansive view of what military intelligence agencies could do under the law.</p>
+
+			<p>"He said at one point that a lot of things aren't clearly legal, but that doesn't make them illegal," says a former military intelligence officer who served under Alexander at INSCOM.</p>
+
+			<p>In November 2001, the general in charge of all Army intelligence had informed his personnel, including Alexander, that the military had broad authority to collect and share information about Americans, so long as they were "reasonably believed to be engaged" in terrorist activities, the general wrote in a widely distributed memo.</p>
+
+			<p>The general didn't say how exactly to make this determination, but it was all the justification Alexander needed. "Hayden's attitude was 'Yes, we have the technological capability, but should we use it?' Keith's was 'We have the capability, so let's use it,'" says the former intelligence official who worked with both men.</p>
+
+			<p>Hayden denied Alexander's request for NSA data. And there was some irony in that decision. At the same time, Hayden was overseeing a highly classified program to monitor Americans' phone records and Internet communications without permission from a court. At least one component of that secret domestic spying program would later prompt senior Justice Department officials to threaten resignation because they thought it was illegal.</p>
+
+			<p>But that was a presidentially authorized program run by a top-tier national intelligence agency. Alexander was a midlevel general who seemed to want his own domestic spying operation. Hayden was so troubled that he reported Alexander to his commanding general, a former colleague says. "He didn't use that atomic word -- 'insubordination' -- but he danced around it."</p>
+
+			<p>The showdown over bending the NSA's pipes was emblematic of Alexander's approach to intelligence, one he has honed over the course of a 39-year military career and deploys today as the director of the country's most powerful spy agency.</p>
+
+			<p>Alexander wants as much data as he can get. And he wants to hang on to it for as long as he can. To prevent the next terrorist attack, he thinks he needs to be able to see entire networks of communications and also go "back in time," as he has said publicly, to study how terrorists and their networks evolve. To find the needle in the haystack, he needs the entire haystack.</p>
+
+			<p>"Alexander's strategy is the same as Google's: I need to get all of the data," says a former administration official who worked with the general. "If he becomes the repository for all that data, he thinks the resources and authorities will follow."</p>
+
+			<p>That strategy has worked well for Alexander. He has served longer than any director in the NSA's history, and today he stands atop a U.S. surveillance empire in which signals intelligence, the agency's specialty, is the coin of the realm. In 2010, he became the first commander of the newly created U.S. Cyber Command, making him responsible for defending military computer networks against spies, hackers, and foreign armed forces -- and for fielding a new generation of cyberwarriors trained to penetrate adversaries' networks. Fueled by a series of relentless and increasingly revealing leaks from former NSA contractor Edward Snowden, the full scope of Alexander's master plan is coming to light.</p>
+
+			<p>Today, the agency is routinely scooping up and storing Americans' phone records. It is screening their emails and text messages, even though the spy agency can't always tell the difference between an innocent American and a foreign terrorist. The NSA uses corporate proxies to monitor up to 75 percent of Internet traffic inside the United States. And it has spent billions of dollars on a secret campaign to foil encryption technologies that individuals, corporations, and governments around the world had long thought protected the privacy of their communications from U.S. intelligence agencies.</p>
+
+			<p>The NSA was already a data behemoth when Alexander took over. But under his watch, the breadth, scale, and ambition of its mission have expanded beyond anything ever contemplated by his predecessors. In 2007, the NSA began collecting information from Internet and technology companies under the so-called PRISM program. In essence, it was a pipes-bending operation. The NSA gets access to the companies' raw data--including e-mails, video chats, and messages sent through social media--and analysts then mine it for clues about terrorists and other foreign intelligence subjects. Similar to how Alexander wanted the NSA to feed him with intelligence at INSCOM, now some of the world's biggest technology companies -- including Google, Microsoft, Facebook, and Apple -- are feeding the NSA. But unlike Hayden, the companies cannot refuse Alexander's advances. The PRISM program operates under a legal regime, put in place a few years after Alexander arrived at the NSA, that allows the agency to demand broad categories of information from technology companies.</p>
+
+			<p>Never in history has one agency of the U.S. government had the capacity, as well as the legal authority, to collect and store so much electronic information. Leaked NSA documents show the agency sucking up data from approximately 150 collection sites on six continents. The agency estimates that 1.6 percent of all data on the Internet flows through its systems on a given day -- an amount of information about 50 percent larger than what Google processes in the same period.</p>
+
+			<p>When Alexander arrived, the NSA was secretly investing in experimental databases to store these oceans of electronic signals and give analysts access to it all in as close to real time as possible. Under his direction, it has helped pioneer new methods of massive storage and retrieval. That has led to a data glut. The agency has collected so much information that it ran out of storage capacity at its 350-acre headquarters at Fort Meade, Maryland, outside Washington, D.C. At a cost of more than $2 billion, it has built a new processing facility in the Utah desert, and it recently broke ground on a complex in Maryland. There is a line item in the NSA's budget just for research on "coping with information overload."</p>
+
+			<p>Yet it's still not enough for Alexander, who has proposed installing the NSA's surveillance equipment on the networks of defense contractors, banks, and other organizations deemed essential to the U.S. economy or national security. Never has this intelligence agency -- whose primary mission is espionage, stealing secrets from other governments -- proposed to become the electronic watchman of American businesses.</p>
+
+			<p>This kind of radical expansion shouldn't come as a surprise. In fact, it's a hallmark of Alexander's career. During the Iraq war, for example, he pioneered a suite of real-time intelligence analysis tools that aimed to scoop up every phone call, email, and text message in the country in a search for terrorists and insurgents. Military and intelligence officials say it provided valuable insights that helped turn the tide of the war.  It was also unprecedented in its scope and scale. He has transferred that architecture to a global scale now, and with his responsibilities at Cyber Command, he is expanding his writ into the world of computer network defense and cyber warfare.</p>
+
+			<p>As a result, the NSA has never been more powerful, more pervasive, and more politically imperiled. The same philosophy that turned Alexander into a giant -- acquire as much data from as many sources as possible -- is now threatening to undo him. Alexander today finds himself in the unusual position of having to publicly defend once-secret programs and reassure Americans that the growth of his agency, which employs more than 35,000 people, is not a cause for alarm. In July, the House of Representatives almost approved a law to constrain the NSA's authorities -- the closest Congress has come to reining in the agency since the 9/11 attacks. That narrow defeat for surveillance opponents has set the stage for a Supreme Court ruling on whether metadata -- the information Alexander has most often sought about Americans -- should be afforded protection under the Fourth Amendment's prohibition against "unreasonable searches and seizures," which would make metadata harder for the government to acquire.</p>
+
+			<p>Alexander declined Foreign Policy's request for an interview, but in response to questions about his leadership, his respect for civil liberties, and the Snowden leaks, he provided a written statement.</p>
+
+			<p>"The missions of NSA and USCYBERCOM are conducted in a manner that is lawful, appropriate, and effective, and under the oversight of all three branches of the U.S. government," Alexander stated. "Our mission is to protect our people and defend the nation within the authorities granted by Congress, the courts and the president. There is an ongoing investigation into the damage sustained by our nation and our allies because of the recent unauthorized disclosure of classified material. Based on what we know to date, we believe these disclosures have caused significant and irreversible harm to the security of the nation."</p>
+
+			<p>In lieu of an interview about his career, Alexander's spokesperson recommended a laudatory profile about him that appeared in West Point magazine. It begins: "At key moments throughout its history, the United States has been fortunate to have the right leader -- someone with an ideal combination of rare talent and strong character -- rise to a position of great responsibility in public service. With General Keith B. Alexander ... Americans are again experiencing this auspicious state of affairs."</p>
+
+			<p>Lawmakers and the public are increasingly taking a different view. They are skeptical about what Alexander has been doing with all the data he's collecting -- and why he's been willing to push the bounds of the law to get it. If he's going to preserve his empire, he'll have to mount the biggest charm offensive of his career. Fortunately for him, Alexander has spent as much time building a political base of power as a technological one.</p>
+
+			<p>* * *</p>
+
+			<p>Those who know Alexander say he is introspective, self-effacing, and even folksy. He's fond of corny jokes and puns and likes to play pool, golf, and Bejeweled Blitz, the addictive puzzle game, on which he says he routinely scores more than 1 million points.</p>
+
+			<p>Alexander is also as skilled a Washington knife fighter as they come. To get the NSA job, he allied himself with the Pentagon brass, most notably Donald Rumsfeld, who distrusted Hayden and thought he had been trying to buck the Pentagon's control of the NSA. Alexander also called on all the right committee members on Capitol Hill, the overseers and appropriators who hold the NSA's future in their hands.</p>
+
+			<p>When he was running the Army's Intelligence and Security Command, Alexander brought many of his future allies down to Fort Belvoir for a tour of his base of operations, a facility known as the Information Dominance Center. It had been designed by a Hollywood set designer to mimic the bridge of the starship Enterprise from Star Trek, complete with chrome panels, computer stations, a huge TV monitor on the forward wall, and doors that made a "whoosh" sound when they slid open and closed. Lawmakers and other important officials took turns sitting in a leather "captain's chair" in the center of the room and watched as Alexander, a lover of science-fiction movies, showed off his data tools on the big screen.</p>
+
+			<p>"Everybody wanted to sit in the chair at least once to pretend he was Jean-Luc Picard," says a retired officer in charge of VIP visits.</p>
+
+			<p>Alexander wowed members of Congress with his eye-popping command center. And he took time to sit with them in their offices and explain the intricacies of modern technology in simple, plain-spoken language. He demonstrated a command of the subject without intimidating those who had none.</p>
+
+			<p>"Alexander is 10 times the political general as David Petraeus," says the former administration official, comparing the NSA director to a man who was once considered a White House contender. "He could charm the paint off a wall."</p>
+
+			<p>Alexander has had to muster every ounce of that political savvy since the Snowden leaks started coming in June. In closed-door briefings, members of Congress have accused him of deceiving them about how much information he has been collecting on Americans. Even when lawmakers have screamed at him from across the table, Alexander has remained "unflappable," says a congressional staffer who has sat in on numerous private briefings since the Snowden leaks. Instead of screaming back, he reminds lawmakers about all the terrorism plots that the NSA has claimed to help foil.</p>
+
+			<p>"He is well aware that he will be criticized if there's another attack," the staffer says. "He has said many times, 'My job is to protect the American people. And I have to be perfect.'"</p>
+
+			<p>There's an implied threat in that statement. If Alexander doesn't get all the information he wants, he cannot do his job. "He never says it explicitly, but the message is, 'You don't want to be the one to make me miss,'" says the former administration official. "You don't want to be the one that denied me these capabilities before the next attack."</p>
+
+			<p>Alexander has a distinct advantage over most, if not all, intelligence chiefs in the government today: He actually understands the multibillion-dollar technical systems that he's running.</p>
+
+			<p>"When he would talk to our engineers, he would get down in the weeds as far as they were. And he'd understand what they were talking about," says a former NSA official. In that respect, he had a leg up on Hayden, who colleagues say is a good big-picture thinker but lacks the geek gene that Alexander was apparently born with.</p>
+
+			<p>"He looked at the technical aspects of the agency more so than any director I've known," says Richard "Dickie" George, who spent 41 years at the NSA and retired as the technical director of the Information Assurance Directorate. "I get the impression he would have been happy being one of those guys working down in the noise," George said, referring to the front-line technicians and analysts working to pluck signals out of the network.</p>
+
+			<p>Alexander, 61, has been a techno-spy since the beginning of his military career. After graduating from West Point in 1974, he went to West Germany, where he was initiated in the dark arts of signals intelligence. Alexander spent his time eavesdropping on military communications emanating from East Germany and Czechoslovakia. He was interested in the mechanics that supported this brand of espionage. He rose quickly through the ranks.</p>
+
+			<p>"It's rare to get a commander who understands technology," says a former Army officer who served with Alexander in 1995, when Alexander was in charge of the 525th Military Intelligence Brigade at Fort Bragg, North Carolina. "Even then he was into big data. You think of the wizards as the guys who are in their 20s." Alexander was 42 at the time.</p>
+
+			<p>At the turn of the century, Alexander took the big-data approach to counterterrorism. How well that method worked continues to be a matter of intense debate. Surely discrete interceptions of terrorists' phone calls and emails have helped disrupt plots and prevent attacks. But huge volumes of data don't always help catch potential plotters. Sometimes, the drive for more data just means capturing more ordinary people in the surveillance driftnet.</p>
+
+			<p>When he ran INSCOM and was horning in on the NSA's turf, Alexander was fond of building charts that showed how a suspected terrorist was connected to a much broader network of people via his communications or the contacts in his phone or email account.</p>
+
+			<p>"He had all these diagrams showing how this guy was connected to that guy and to that guy," says a former NSA official who heard Alexander give briefings on the floor of the Information Dominance Center. "Some of my colleagues and I were skeptical. Later, we had a chance to review the information. It turns out that all [that] those guys were connected to were pizza shops."</p>
+
+			<p>A retired military officer who worked with Alexander also describes a "massive network chart" that was purportedly about al Qaeda and its connections in Afghanistan. Upon closer examination, the retired officer says, "We found there was no data behind the links. No verifiable sources. We later found out that a quarter of the guys named on the chart had already been killed in Afghanistan."</p>
+
+			<p>Those network charts have become more massive now that Alexander is running the NSA. When analysts try to determine if a particular person is engaged in terrorist activity, they may look at the communications of people who are as many as three steps, or "hops," removed from the original target. This means that even when the NSA is focused on just one individual, the number of people who are being caught up in the agency's electronic nets could easily be in the tens of millions.</p>
+
+			<p>According to an internal audit, the agency's surveillance operations have been beset by human error and fooled by moving targets. After the NSA's legal authorities were expanded and the PRISM program was implemented, the agency inadvertently collected Americans' communications thousands of times each year, between 2008 and 2012, in violation of privacy rules and the law.</p>
+
+			<p>Yet the NSA still pursued a counterterrorism strategy that relies on ever-bigger data sets. Under Alexander's leadership, one of the agency's signature analysis tools was a digital graph that showed how hundreds, sometimes thousands, of people, places, and events were connected to each other. They were displayed as a tangle of dots and lines. Critics called it the BAG -- for "big ass graph" -- and said it produced very few useful leads. CIA officials in charge of tracking overseas terrorist cells were particularly unimpressed by it. "I don't need this," a senior CIA officer working on the agency's drone program once told an NSA analyst who showed up with a big, nebulous graph. "I just need you to tell me whose ass to put a Hellfire missile on."</p>
+
+			<p>Given his pedigree, it's unsurprising that Alexander is a devotee of big data. "It was taken as a given for him, as a career intelligence officer, that more information is better," says another retired military officer. "That was ingrained."</p>
+
+			<p>But Alexander was never alone in his obsession. An obscure civilian engineer named James Heath has been a constant companion for a significant portion of Alexander's career. More than any one person, Heath influenced how the general went about building an information empire.</p>
+
+			<p>Several former intelligence officials who worked with Heath described him as Alexander's "mad scientist." Another called him the NSA director's "evil genius." For years, Heath, a brilliant but abrasive technologist, has been in charge of making Alexander's most ambitious ideas a reality; many of the controversial data-mining tools that Alexander wanted to use against the NSA's raw intelligence were developed by Heath, for example. "He's smart, crazy, and dangerous. He'll push the technology to the limits to get it to do what he wants," says a former intelligence official.</p>
+
+			<p>Heath has followed Alexander from post to post, but he almost always stays in the shadows. Heath recently retired from government service as the senior science advisor to the NSA director -- Alexander's personal tech guru. "The general really looked to him for advice," says George, the former technical director. "Jim didn't mind breaking some eggs to make an omelet. He couldn't do that on his own, but General Alexander could. They brought a sense of needing to get things done. They were a dynamic duo."</p>
+
+			<p>Precisely where Alexander met Heath is unclear. They have worked together since at least 1995, when Alexander commanded the 525th Military Intelligence Brigade and Heath was his scientific sidekick. "That's where Heath took his first runs at what he called 'data visualization,' which is now called 'big data,'" says a retired military intelligence officer. Heath was building tools that helped commanders on the field integrate information from different sensors -- reconnaissance planes, satellites, signals intercepts -- and "see" it on their screens. Later, Heath would work with tools that showed how words in a document or pages on the Internet were linked together, displaying those connections in the form of three-dimensional maps and graphs.</p>
+
+			<p>At the Information Dominance Center, Heath built a program called the "automatic ingestion manager." It was a search engine for massive sets of data, and in 1999, he started taking it for test runs on the Internet.</p>
+
+			<p>In one experiment, the retired officer says, the ingestion manager searched for all web pages linked to the website of the Defense Intelligence Agency (DIA). Those included every page on the DIA's site, and the tool scoured and copied them so aggressively that it was mistaken for a hostile cyberattack. The site's automated defenses kicked in and shut it down.</p>
+
+			<p>On another occasion, the searching tool landed on an anti-war website while searching for information about the conflict in Kosovo. "We immediately got a letter from the owner of the site wanting to know why was the military spying on him," the retired officer says. As far as he knows, the owner took no legal action against the Army, and the test run was stopped.</p>
+
+			<p>Those experiments with "bleeding-edge" technology, as the denizens of the Information Dominance Center liked to call it, shaped Heath and Alexander's approach to technology in spy craft. And when they ascended to the NSA in 2005, their influence was broad and profound. "These guys have propelled the intelligence community into big data," says the retired officer.</p>
+
+			<p>Heath was at Alexander's side for the expansion of Internet surveillance under the PRISM program. Colleagues say it fell largely to him to design technologies that tried to make sense of all the new information the NSA was gobbling up. But Heath had developed a reputation for building expensive systems that never really work as promised and then leaving them half-baked in order to follow Alexander on to some new mission.</p>
+
+			<p>"He moved fairly fast and loose with money and spent a lot of it," the retired officer says. "He doubled the size of the Information Dominance Center and then built another facility right next door to it. They didn't need it. It's just what Heath and Alexander wanted to do." The Information Operations Center, as it was called, was underused and spent too much money, says the retired officer. "It's a center in search of a customer."</p>
+
+			<p>Heath's reputation followed him to the NSA. In early 2010, weeks after a young al Qaeda terrorist with a bomb sewn into his underwear tried to bring down a U.S. airliner over Detroit on Christmas Day, the director of national intelligence, Dennis Blair, called for a new tool that would help the disparate intelligence agencies better connect the dots about terrorism plots. The NSA, the State Department, and the CIA each had possessed fragments of information about the so-called underwear bomber's intentions, but there had been no dependable mechanism for integrating them all and providing what one former national security official described as "a quick-reaction capability" so that U.S. security agencies would be warned about the bomber before he got on the plane.</p>
+
+			<p>Blair put the NSA in charge of building this new capability, and the task eventually fell to Heath. "It was a complete disaster," says the former national security official, who was briefed on the project. "Heath's approach was all based on signals intelligence [the kind the NSA routinely collects] rather than taking into account all the other data coming in from the CIA and other sources. That's typical of Heath. He's got a very narrow viewpoint to solve a problem."</p>
+
+			<p>Like other projects of Heath's, the former official says, this one was never fully implemented. As a result, the intelligence community still didn't have a way to stitch together clues from different databases in time to stop the next would-be bomber. Heath -- and Alexander -- moved on to the next big project.</p>
+
+			<p>"There's two ways of looking at these guys," the retired military officer says. "Two visionaries who took risks and pushed the intelligence community forward. Or as two guys who blew a monumental amount of money."</p>
+
+			<p>As immense as the NSA's mission has become -- patrolling the world's data fields in search of terrorists, spies, and computer hackers -- it is merely one phase of Alexander's plan. The NSA's primary mission is to protect government systems and information. But under his leadership, the agency is also extending its reach into the private sector in unprecedented ways.</p>
+
+			<p>Toward the end of George W. Bush's administration, Alexander helped persuade Defense Department officials to set up a computer network defense project to prevent foreign intelligence agencies --mainly China's -- from stealing weapons plans and other national secrets from government contractors' computers.</p>
+
+			<p>Under the Defense Industrial Base initiative, also known as the DIB, the NSA provides the companies with intelligence about the cyberthreats it's tracking. In return, the companies report back about what they see on their networks and share intelligence with each other.</p>
+
+			<p>Pentagon officials say the program has helped stop some cyber-espionage. But many corporate participants say Alexander's primary motive has not been to share what the NSA knows about hackers. It's to get intelligence from the companies -- to make them the NSA's digital scouts. What is billed as an information-sharing arrangement has sometimes seemed more like a one-way street, leading straight to the NSA's headquarters at Fort Meade.</p>
+
+			<p>"We wanted companies to be able to share information with each other," says the former administration official, "to create a picture about the threats against them. The NSA wanted the picture."</p>
+
+			<p>After the DIB was up and running, Alexander proposed going further. "He wanted to create a wall around other sensitive institutions in America, to include financial institutions, and to install equipment to monitor their networks," says the former administration official. "He wanted this to be running in every Wall Street bank."</p>
+
+			<p>That aspect of the plan has never been fully implemented, largely due to legal concerns. If a company allowed the government to install monitoring equipment on its systems, a court could decide that the company was acting as an agent of the government. And if surveillance were conducted without a warrant or legitimate connection to an investigation, the company could be accused of violating the Fourth Amendment. Warrantless surveillance can be unconstitutional regardless of whether the NSA or Google or Goldman Sachs is doing it.</p>
+
+			<p>"That's a subtle point, and that subtlety was often lost on NSA," says the former administration official. "Alexander has ignored that Fourth Amendment concern."</p>
+
+			<p>The DIB experiment was a first step toward Alexander's taking more control over the country's cyberdefenses, and it was illustrative of his assertive approach to the problem. "He was always challenging us on the defensive side to be more aware and to try and find and counter the threat," says Tony Sager, who was the chief operating officer for the NSA's Information Assurance Directorate, which protects classified government information and computers. "He wanted to know, 'Who are the bad guys? How do we go after them?'"</p>
+
+			<p>While it's a given that the NSA cannot monitor the entire Internet on its own and that it needs intelligence from companies, Alexander has questioned whether companies have the capacity to protect themselves. "What we see is an increasing level of activity on the networks," he said recently at a security conference in Canada. "I am concerned that this is going to break a threshold where the private sector can no longer handle it and the government is going to have to step in."</p>
+
+			<p>* * *</p>
+
+			<p>Now, for the first time in Alexander's career, Congress and the general public are expressing deep misgivings about sharing information with the NSA or letting it install surveillance equipment. A Rasmussen poll of likely voters taken in June found that 68 percent believe it's likely the government is listening to their communications, despite repeated assurances from Alexander and President Barack Obama that the NSA is only collecting anonymous metadata about Americans' phone calls. In another Rasmussen poll, 57 percent of respondents said they think it's likely that the government will use NSA intelligence "to harass political opponents."</p>
+
+			<p>Some who know Alexander say he doesn't appreciate the depth of public mistrust and cynicism about the NSA's mission. "People in the intelligence community in general, and certainly Alexander, don't understand the strategic value of having a largely unified country and a long-term trust in the intelligence business," says a former intelligence official, who has worked with Alexander. Another adds, "There's a feeling within the NSA that they're all patriotic citizens interested in protecting privacy, but they lose sight of the fact that people don't trust the government."</p>
+
+			<p>Even Alexander's strongest critics don't doubt his good intentions. "He's not a nefarious guy," says the former administration official. "I really do feel like he believes he's doing this for the right reasons." Two of the retired military officers who have worked with him say Alexander was seared by the bombing of the USS Cole in 2000 and later the 9/11 attacks, a pair of major intelligence failures that occurred while he was serving in senior-level positions in military intelligence. They said he vowed to do all he could to prevent another attack that could take the lives of Americans and military service members.</p>
+
+			<p>But those who've worked closely with Alexander say he has become blinded by the power of technology. "He believes they have enough technical safeguards in place at the NSA to protect civil liberties and perform their mission," the former administration official says. "They do have a very robust capability -- probably better than any other agency. But he doesn't get that this power can still be abused. Americans want introspection. Transparency is a good thing. He doesn't understand that. In his mind it's 'You should trust me, and in exchange, I give you protection.'"</p>
+
+			<p>On July 30 in Las Vegas, Alexander sat down for dinner with a group of civil liberties activists and Internet security researchers. He was in town to give a keynote address the next day at the Black Hat security conference. The mood at the table was chilly, according to people who were in attendance. In 2012, Alexander had won plaudits for his speech at Black Hat's sister conference, Def Con, in which he'd implored the assembled community of experts to join him in their mutual cause: protecting the Internet as a safe space for speech, communications, and commerce. Now, however, nearly two months after the first leaks from Snowden, the people around the table wondered whether they could still trust the NSA director.</p>
+
+			<p>His dinner companions questioned Alexander about the NSA's legal authority to conduct massive electronic surveillance. Two guests had recently written a New York Times op-ed calling the NSA's activities "criminal." Alexander was quick to debate the finer points of the law and defend his agency's programs -- at least the ones that have been revealed -- as closely monitored and focused solely on terrorists' information.</p>
+
+			<p>But he also tried to convince his audience that they should help keep the NSA's surveillance system running. In so many words, Alexander told them: The terrorists only have to succeed once to kill thousands of people. And if they do, all of the rules we have in place to protect people's privacy will go out the window.</p>
+
+			<p>Alexander cast himself as the ultimate defender of civil liberties, as a man who needs to spy on some people in order to protect everyone. He knows that in the wake of another major terrorist attack on U.S. soil, the NSA will be unleashed to find the perpetrators and stop the next assault. Random searches of metadata, broad surveillance of purely domestic communications, warrantless seizure of stored communications -- presumably these and other extraordinary measures would be on the table. Alexander may not have spelled out just what the NSA would do after another homeland strike, but the message was clear: We don't want to find out.</p>
+
+			<p>Alexander was asking his dinner companions to trust him. But his credibility has been badly damaged. Alexander was heckled at his speech the next day at Black Hat. He had been slated to talk at Def Con too, but the organizers rescinded their invitation after the Snowden leaks. And even among Alexander's cohort, trust is flagging.</p>
+
+			<p>"You'll never find evidence that Keith sits in his office at lunch listening to tapes of U.S. conversations," says a former NSA official. "But I think he has a little bit of naiveté about this controversy. He thinks, 'What's the problem? I wouldn't abuse this power. Aren't we all honorable people?' People get into these insular worlds out there at NSA. I think Keith fits right in."</p>
+
+			<p>One of the retired military officers, who worked with Alexander on several big-data projects, said he was shaken by revelations that the agency is collecting all Americans' phone records and examining enormous amounts of Internet traffic. "I've not changed my opinion on the right balance between security versus privacy, but what the NSA is doing bothers me," he says. "It's the massive amount of information they're collecting. I know they're not listening to everyone's phone calls. No one has time for that. But speaking as an analyst who has used metadata, I do not sleep well at night knowing these guys can see everything. That trust has been lost."</p>
+		</div>
+		<div title="DNA: Not Boring!" class="copy" id="dna">
+			<p>By David Dobbs for psmag.com</p>
+			<p>A few years ago, Gene Robinson, of Urbana, Illinois, asked some associates in southern Mexico to help him kidnap some 1,000 newborns. For their victims they chose bees. Half were European honeybees, Apis mellifera ligustica, the sweet-tempered kind most beekeepers raise. The other half were ligustica’s genetically close cousins, Apis mellifera scutellata, the African strain better known as killer bees. Though the two subspecies are nearly indistinguishable, the latter defend territory far more aggressively. Kick a European honeybee hive and perhaps a hundred bees will attack you. Kick a killer bee hive and you may suffer a thousand stings or more. Two thousand will kill you.</p>
+
+			<p>Working carefully, Robinson’s conspirators—researchers at Mexico’s National Center for Research in Animal Physiology, in the high resort town of Ixtapan de la Sal—jiggled loose the lids from two African hives and two European hives, pulled free a few honeycomb racks, plucked off about 250 of the youngest bees from each hive, and painted marks on the bees’ tiny backs. Then they switched each set of newborns into the hive of the other subspecies.</p>
+
+			<p>Robinson, back in his office at the University of Illinois at Urbana-Champaign’s Department of Entomology, did not fret about the bees’ safety. He knew that if you move bees to a new colony in their first day, the colony accepts them as its own. Nevertheless, Robinson did expect the bees would be changed by their adoptive homes: He expected the killer bees to take on the European bees’ moderate ways and the European bees to assume the killer bees’ more violent temperament. Robinson had discovered this in prior experiments. But he hadn’t yet figured out how it happened.</p>
+
+			<p>He suspected the answer lay in the bees’ genes. He didn’t expect the bees’ actual DNA to change: Random mutations aside, genes generally don’t change during an organism’s lifetime. Rather, he suspected the bees’ genes would behave differently in their new homes—wildly differently.</p>
+
+			<p>This notion was both reasonable and radical. Scientists have known for decades that genes can vary their level of activity, as if controlled by dimmer switches. Most cells in your body contain every one of your 22,000 or so genes. But in any given cell at any given time, only a tiny percentage of those genes is active, sending out chemical messages that affect the activity of the cell. This variable gene activity, called gene expression, is how your body does most of its work.</p>
+
+			<p>The fish underwent massive surges in gene expression that immediately blinged up his pewter coloring with lurid red and blue streaks and, in a matter of hours, caused him to grow some 20 percent. It was as if Jason Schwartzman, coming to work one day to learn the big office stud had quit, morphed into Arnold Schwarzenegger by close of business.</p>
+
+			<p>Sometimes these turns of the dimmer switch correspond to basic biological events, as when you develop tissues in the womb, enter puberty, or stop growing. At other times gene activity cranks up or spins down in response to changes in your environment. Thus certain genes switch on to fight infection or heal your wounds—or, running amok, give you cancer or burn your brain with fever. Changes in gene expression can make you thin, fat, or strikingly different from your supposedly identical twin. When it comes down to it, really, genes don’t make you who you are. Gene expression does. And gene expression varies depending on the life you live.</p>
+
+			<p>Every biologist accepts this. That was the safe, reasonable part of Robinson’s notion. Where he went out on a limb was in questioning the conventional wisdom that environment usually causes fairly limited changes in gene expression. It might sharply alter the activity of some genes, as happens in cancer or digestion. But in all but a few special cases, the thinking went, environment generally brightens or dims the activity of only a few genes at a time.</p>
+
+			<p>Robinson, however, suspected that environment could spin the dials on “big sectors of genes, right across the genome”—and that an individual’s social environment might exert a particularly powerful effect. Who you hung out with and how they behaved, in short, could dramatically affect which of your genes spoke up and which stayed quiet—and thus change who you were.</p>
+
+			<p>Robinson was already seeing this in his bees. The winter before, he had asked a new post-doc, Cédric Alaux, to look at the gene-expression patterns of honeybees that had been repeatedly exposed to a pheromone that signals alarm. (Any honeybee that detects a threat emits this pheromone. It happens to smell like bananas. Thus “it’s not a good idea,” says Alaux, “to eat a banana next to a bee hive.”)</p>
+
+			<p>To a bee, the pheromone makes a social statement: Friends, you are in danger. Robinson had long known that bees react to this cry by undergoing behavioral and neural changes: Their brains fire up and they literally fly into action. He also knew that repeated alarms make African bees more and more hostile. When Alaux looked at the gene-expression profiles of the bees exposed again and again to alarm pheromone, he and Robinson saw why: With repeated alarms, hundreds of genes—genes that previous studies had associated with aggression—grew progressively busier. The rise in gene expression neatly matched the rise in the aggressiveness of the bees’ response to threats.</p>
+
+			<p>Robinson had not expected that. “The pheromone just lit up the gene expression, and it kept leaving it higher.” The reason soon became apparent: Some of the genes affected were transcription factors—genes that regulate other genes. This created a cascading gene-expression response, with scores of genes responding.</p>
+
+			<p>This finding inspired Robinson’s kidnapping-and-cross-fostering study. Would moving baby bees to wildly different social environments reshape the curves of their gene-expression responses? Down in Ixtapan, Robinson’s collaborators suited up every five to 10 days, opened the hives, found about a dozen foster bees in each one, and sucked them up with a special vacuum. The vacuum shot them into a chamber chilled with liquid nitrogen. The intense cold instantly froze the bees’ every cell, preserving the state of their gene activity at that moment. At the end of six weeks, when the researchers had collected about 250 bees representing every stage of bee life, the team packed up the frozen bees and shipped them to Illinois.</p>
+
+			<p>There, Robinson’s staff removed the bees’ sesame-seed-size brains, ground them up, and ran them through a DNA microarray machine. This identified which genes were busy in a bee’s brain at the moment it met the bee-vac. When Robinson sorted his data by group—European bees raised in African hives, for instance, or African bees raised normally among their African kin—he could see how each group’s genes reacted to their lives.</p>
+
+			<p>Robinson organized the data for each group onto a grid of red and green color-coded squares: Each square represented a different gene, and its color represented the group’s average rate of gene expression. Red squares represented genes that were especially active in most of the bees in that group; the brighter the red, the more bees in which that gene had been busy. Green squares represented genes that were silent or underactive in most of the group. The printout of each group’s results looked like a sort of cubist Christmas card.</p>
+
+			<p>When he got the cards, says Robinson, “the results were stunning.” For the bees that had been kidnapped, life in a new home had indeed altered the activity of “whole sectors” of genes. When their gene expression data was viewed on the cards alongside the data for groups of bees raised among their own kin, a mere glance showed the dramatic change. Hundreds of genes had flipped colors. The move between hives didn’t just make the bees act differently. It made their genes work differently, and on a broad scale.</p>
+
+			<p>What’s more, the cards for the adopted bees of both species came to ever more resemble, as they moved through life, the cards of the bees they moved in with. With every passing day their genes acted more like those of their new hive mates (and less like those of their genetic siblings back home). Many of the genes that switched on or off are known to affect behavior; several are associated with aggression. The bees also acted differently. Their dispositions changed to match that of their hive mates. It seemed the genome, without changing its code, could transform an animal into something very like a different subspecies.</p>
+
+			<p>These bees didn’t just act like different bees. They’d pretty much become different bees. To Robinson, this spoke of a genome far more fluid—far more socially fluid—than previously conceived.</p>
+
+			<p></p>
+
+			<p>Gene Robinson, an entomologist at the University of Illinois, found that when European honeybees are raised among more aggressive African killer bees, they not only start to become as belligerent as their new hive mates—they come to genetically resemble them. (PHOTO: COURTESY OF GENE ROBINSON)</p>
+
+			<p>ROBINSON SOON REALIZED HE was not alone in seeing this. At conferences and in the literature, he kept bumping into other researchers who saw gene networks responding fast and wide to social life. David Clayton, a neurobiologist also on the University of Illinois campus, found that if a male zebra finch heard another male zebra finch singing nearby, a particular gene in the bird’s forebrain would “re up—and it would do so differently depending on whether the other finch was strange and threatening, or familiar and safe.</p>
+
+			<p>Others found this same gene, dubbed ZENK ramping up in other species. In each case, the change in ZENK’s activity corresponded to some change in behavior: a bird might relax in response to a song, or become vigilant and tense. Duke researchers, for instance, found that when female zebra finches listened to male zebra finches’ songs, the females’ ZENK gene triggered massive gene-expression changes in their forebrains—a socially sensitive brain area in birds as well as humans. The changes differed depending on whether the song was a mating call or a territorial claim. And perhaps most remarkably, all</p>
+
+			<p>of these changes happened incredibly fast—within a half hour, sometimes within just five minutes.</p>
+
+			<p>ZENK, it appeared, was a so-called “immediate early gene,” a type of regulatory gene that can cause whole networks of other genes to change activity. These sorts of regulatory gene-expression response had already been identified in physiological systems such as digestion and immunity. Now they also seemed to drive quick responses to social conditions.</p>
+
+			<p>One of the most startling early demonstrations of such a response occurred in 2005 in the lab of Stanford biologist Russell Fernald. For years, Fernald had studied the African cichlid Astatotilapia burtoni, a freshwater fish about two inches long and dull pewter in color. By 2005 he had shown that among burtoni, the top male in any small population lives like some fishy pharaoh, getting far more food, territory, and sex than even the No. 2 male. This No. 1 male cichlid also sports a bigger and brighter body. And there is always only one No. 1.</p>
+
+			<p>I wonder, Fernald thought, what would happen if we just removed him?</p>
+
+			<p>So one day Fernald turned out the lights over one of his cichlid tanks, scooped out big flashy No. 1, and then, 12 hours later, flipped the lights back on. When the No. 2 cichlid saw that he was now No. 1, he responded quickly. He underwent massive surges in gene expression that immediately blinged up his pewter coloring with lurid red and blue streaks and, in a matter of hours, caused him to grow some 20 percent. It was as if Jason Schwartzman, coming to work one day to learn the big office stud had quit, morphed into Arnold Schwarzenegger by close of business.</p>
+
+			<p>These studies, says Greg Wray, an evolutionary biologist at Duke who has focused on gene expression for over a decade, caused quite a stir. “You suddenly realize birds are hearing a song and having massive, widespread changes in gene expression in just 15 minutes? Something big is going on.”</p>
+
+			<p>This big something, this startlingly quick gene-expression response to the social world, is a phenomenon we are just beginning to understand. The recent explosion of interest in “epigenetics”—a term literally meaning “around the gene,” and referring to anything that changes a gene’s effect without changing the actual DNA sequence—has tended to focus on the long game of gene-environment interactions: how famine among expectant mothers in the Netherlands during World War II, for instance, affected gene expression and behavior in their children; or how mother rats, by licking and grooming their pups more or less assiduously, can alter the wrappings around their offspring’s DNA in ways that influence how anxious the pups will be for the rest of their lives. The idea that experience can echo in our genes across generations is certainly a powerful one. But to focus only on these narrow, long-reaching effects is to miss much of the action where epigenetic influence and gene activity is concerned. This fresh work by Robinson, Fernald, Clayton, and others—encompassing studies of multiple organisms, from bees and birds to monkeys and humans—suggests something more exciting: that our social lives can change our gene expression with a rapidity, breadth, and depth previously overlooked.</p>
+
+			<p>Why would we have evolved this way? The most probable answer is that an organism that responds quickly to fast-changing social environments will more likely survive them. That organism won’t have to wait around, as it were, for better genes to evolve on the species level. Immunologists discovered something similar 25 years ago: Adapting to new pathogens the old-fashioned way—waiting for natural selection to favor genes that create resistance to specific pathogens—would happen too slowly to counter the rapidly changing pathogen environment. Instead, the immune system uses networks of genes that can respond quickly and flexibly to new threats.</p>
+
+			<p>We appear to respond in the same way to our social environment. Faced with an unpredictable, complex, ever-changing population to whom we must respond successfully, our genes behave accordingly—as if a fast, fluid response is a matter of life or death.</p>
+
+			<p>“If you actually measure stress, using our best available instruments, it can’t hold a candle to social isolation. Social isolation is the best-established, most robust social or psychological risk factor for disease out there. Nothing can compete.”</p>
+
+			<p>ABOUT THE TIME ROBINSON was seeing fast gene expression changes in bees, in the early 2000s, he and many of his colleagues were taking notice of an up-and-coming UCLA researcher named Steve Cole.</p>
+
+			<p>Cole, a Californian then in his early 40s, had trained in psychology at the University of California-Santa Barbara and Stanford; then in social psychology, epidemiology, virology, cancer, and genetics</p>
+
+			<p>at UCLA. Even as an undergrad, Cole had “this astute, fine-grained approach,” says Susan Andersen, a professor of psychology now at NYU who was one of his teachers at UC Santa Barbara in the late 1980s. “He thinks about things in very precise detail.”</p>
+
+			<p>In his post-doctoral work at UCLA, Cole focused on the genetics of immunology and cancer because those fields had pioneered hard-nosed gene-expression research. After that, he became one of the earliest researchers to bring the study of whole-genome gene-expression to social psychology. The gene’s ongoing, real-time response to incoming information, he realized, is where life works many of its changes on us. The idea is both reductive and expansive. We are but cells. At each cell’s center, a tight tangle of DNA writes and hands out the cell’s marching orders. Between that center and the world stand only a series of membranes.</p>
+
+			<p>“Porous membranes,” notes Cole.</p>
+
+			<p>“We think of our bodies as stable biological structures that live in the world but are fundamentally separate from it. That we are unitary organisms in the world but passing through it. But what we’re learning from the molecular processes that actually keep our bodies running is that we’re far more fluid than we realize, and the world passes through us.”</p>
+
+			<p>Cole told me this over dinner. We had met on the UCLA campus and walked south a few blocks, through bright April sun, to an almost empty sushi restaurant. Now, waving his chopsticks over a platter of urchin, squid, and amberjack, he said, “Every day, as our cells die off, we have to replace one to two percent of our molecular being. We’re constantly building and re-engineering new cells. And that regeneration is driven by the contingent nature of gene expression.</p>
+
+			<p>“This is what a cell is about. A cell,” he said, clasping some amberjack, “is a machine for turning experience into biology.”</p>
+
+			<p>When Cole started his social psychology research in the early 1990s, the microarray technology that spots changes in gene expression was still in its expensive infancy, and saw use primarily in immunology and cancer. So he began by using the tools of epidemiology—essentially the study of how people live their lives. Some of his early papers looked at how social experience affected men with HIV. In a 1996 study of 80 gay men, all of whom had been HIV-positive but healthy nine years earlier, Cole and his colleagues found that closeted men succumbed to the virus much more readily.</p>
+
+			<p>He then found that HIV-positive men who were lonely also got sicker sooner, regardless of whether they were closeted. Then he showed that closeted men without HIV got cancer and various infectious diseases at higher rates than openly gay men did. At about the same time, psychologists at Carnegie Mellon finished a well-controlled study showing that people with richer social ties got fewer common colds.</p>
+
+			<p>Something about feeling stressed or alone was gumming up the immune system—sometimes fatally.</p>
+
+			<p>“You’re besieged by a virus that’s going to kill you,” says Cole, “but the fact that you’re socially stressed and isolated seems to shut down your viral defenses. What’s going on there?”</p>
+
+			<p>He was determined to find out. But the research methods on hand at the time could take him only so far: “Epidemiology won’t exactly lie to you. But it’s hard to get it to tell you the whole story.” For a while he tried to figure things out at the bench, with pipettes and slides and assays. “I’d take norepinephrine [a key stress hormone] and squirt it on some infected T-cells and watch the virus grow faster. The norepinephrine was knocking down the antiviral response. That’s great. Virologists love that. But it’s not satisfying as a complete answer, because it doesn’t fully explain what’s happening in the real world.</p>
+
+			<p>“You can make almost anything happen in a test tube. I needed something else. I had set up all this theory. I needed a place to test it.”</p>
+
+			<p>His next step was to turn to rhesus monkeys, a lab species that allows controlled study. In 2007, he joined John Capitanio, a primatologist at the University of California-Davis, in looking at how social stress affected rhesus monkeys with SIV, or simian immunodeficiency virus, the monkey version of HIV. Capitanio had found that monkeys with SIV fell ill and died faster if they were stressed out by constantly being moved into new groups among strangers—a simian parallel to Cole’s 1996 study on lonely gay men.</p>
+
+			<p>Capitanio had run a rough immune analysis that showed the stressed monkeys mounted weak antiviral responses. Cole offered to look deeper. First he tore apart the lymph nodes—“ground central for infection”—and found that in the socially stressed monkeys, the virus bloomed around the sympathetic nerve trunks, which carry stress signals into the lymph node.</p>
+
+			<p>“This was a hint,” says Cole: The virus was running amok precisely where the immune response should have been strongest. The stress signals in the nerve trunks, it seemed, were getting either muted en route or ignored on arrival. As Cole looked closer, he found it was the latter: The monkeys’ bodies were generating the appropriate stress signals, but the immune system didn’t seem to be responding to them properly. Why not? He couldn’t find out with the tools he had. He was still looking at cells. He needed to look inside them.</p>
+
+			<p>Finally Cole got his chance. At UCLA, where he had been made a professor in 2001, he had been working hard to master gene-expression analysis across an entire genome. Microarray machines—the kind Gene Robinson was using on his bees—were getting cheaper. Cole got access to one and put it to work.</p>
+
+			<p>Thus commenced what we might call the lonely people studies.</p>
+
+			<p>First, in collaboration with University of Chicago social psychologist John Cacioppo, Cole mined a questionnaire about social connections that Cacioppo had given to 153 healthy Chicagoans in their 50s and 60s. Cacioppo and Cole identified the eight most socially secure people and the six loneliest and drew blood samples from them. (The socially insecure half-dozen were lonely indeed; they reported having felt distant from others for the previous four years.) Then Cole extracted genetic material from the blood’s leukocytes (a key immune-system player) and looked at what their DNA was up to.</p>
+
+			<p>He found a broad, weird, strongly patterned gene-expression response that would become mighty familiar over the next few years. Of roughly 22,000 genes in the human genome, the lonely and not-lonely groups showed sharply different gene-expression responses in 209. That meant that about one percent of the genome—a considerable portion—was responding differently depending on whether a person felt alone or connected. Printouts of the subjects’ gene-expression patterns looked much like Robinson’s red-and-green readouts of the changes in his cross-fostered bees: Whole sectors of genes looked markedly different in the lonely and the socially secure. And many of these genes played roles in inflammatory immune responses.</p>
+
+			<p>Now Cole was getting somewhere.</p>
+
+			<p>Normally, a healthy immune system works by deploying what amounts to a leashed attack dog. It detects a pathogen, then sends inflammatory and other responses to destroy the invader while also activating an anti-inflammatory response—the leash—to keep the inflammation in check. The lonely Chicagoans’ immune systems, however, suggested an attack dog off leash—even though they weren’t sick. Some 78 genes that normally work together to drive inflammation were busier than usual, as if these healthy people were fighting infection. Meanwhile, 131 genes that usually cooperate to control inflammation were underactive. The underactive genes also included key antiviral genes.</p>
+
+			<p>This opened a whole new avenue of insight. If social stress reliably created this gene-expression profile, it might explain a lot about why, for instance, the lonely HIV carriers in Cole’s earlier studies fell so much faster to the disease.</p>
+
+			<p>But this was a study of just 14 people. Cole needed more.</p>
+
+			<p>Over the next several years, he got them. He found similarly unbalanced gene-expression or immune-response profiles in groups including poor children, depressed people with cancer, and people caring for spouses dying of cancer. He topped his efforts off with a study in which social stress levels in young women predicted changes in their gene activity six months later. Cole and his collaborators on that study, psychologists Gregory Miller and Nicolas Rohleder of the University of British Columbia, interviewed 103 healthy Vancouver-area women aged 15 to 19 about their social lives, drew blood, and ran gene-expression profiles, and after half a year drew blood and ran profiles again. Some of the women reported at the time of the initial interview that they were having trouble with their love lives, their families, or their friends. Over the next six months, these socially troubled subjects took on the sort of imbalanced gene-expression profile Cole found in his other isolation studies: busy attack dogs and broken leashes. Except here, in a prospective study, he saw the attack dog breaking free of its restraints: Social stress changed these young women’s gene-expression patterns before his eyes.</p>
+
+			<p></p>
+
+			<p>Gene-expression microarray printouts (this one comes from a study of autistic versus non-autistic people) depict snapshots of activity across a genome. Red squares represent genes that are more active, green squares represent genes that are less active. (PHOTO: PUBLIC DOMAIN)</p>
+
+			<p>IN EARLY 2009, COLE sat down to make sense of all this in a review paper that he would publish later that year in Current Directions in Psychological Science. Two years later we sat in his spare, rather small office at UCLA and discussed what he’d found. Cole, trimly built but close to six feet tall, speaks in a reedy voice that is slightly higher than his frame might lead you to expect. Sometimes, when he’s grabbing for a new thought or trying to emphasize a point, it jumps a register. He is often asked to give talks about his work, and it’s easy to see why: Relaxed but animated, he speaks in such an organized manner that you can almost see the paragraphs form in the air between you. He spends much of his time on the road. Thus the half-unpacked office, he said, gesturing around him. His lab, down the hall, “is essentially one really good lab manager”—Jesusa M. Arevalo, whom he frequently lists on his papers—“and a bunch of robots,” the machines that run the assays.</p>
+
+			<p>“We typically think of stress as being a risk factor for disease,” said Cole. “And it is, somewhat. But if you actually measure stress, using our best available instruments, it can’t hold a candle to social isolation. Social isolation is the best-established, most robust social or psychological risk factor for disease out there. Nothing can compete.”</p>
+
+			<p>This helps explain, for instance, why many people who work in high-stress but rewarding jobs don’t seem to suffer ill effects, while others, particularly those isolated and in poverty, wind up accruing lists of stress-related diagnoses—obesity, Type 2 diabetes, hypertension, atherosclerosis, heart failure, stroke.</p>
+
+			<p>Despite these well-known effects, Cole said he was amazed when he started finding that social connectivity wrought such powerful effects on gene expression.</p>
+
+			<p>“Or not that we found it,” he corrected, “but that we’re seeing it with such consistency. Science is noisy. I would’ve bet my eyeteeth that we’d get a lot of noisy results that are inconsistent from one realm to another. And at the level of individual genes that’s kind of true—there is some noise there.” But the kinds of genes that get dialed up or down in response to social experience, he said, and the gene networks and gene-expression cascades that they set off, “are surprisingly consistent—from monkeys to people, from five-year-old kids to adults, from Vancouver teenagers to 60-year-olds living in Chicago.”</p>
+
+			<p>COLE’S WORK CARRIES ALL kinds of implications—some weighty and practical, some heady and philosophical. It may, for instance, help explain the health problems that so often haunt the poor. Poverty savages the body. Hundreds of studies over the past few decades have tied low income to higher rates of asthma, flu, heart attacks, cancer, and everything in between. Poverty itself starts to look like a disease. Yet an empty wallet can’t make you sick. And we all know people who escape poverty’s dangers. So what is it about a life of poverty that makes us ill?</p>
+
+			<p>Cole asked essentially this question in a 2008 study he conducted with Miller and Edith Chen, another social psychologist then at the University of British Columbia. The paper appeared in an odd forum: Thorax, a journal about medical problems in the chest. The researchers gathered and ran gene-expression profiles on 31 kids, ranging from nine to 18 years old, who had asthma; 16 were poor, 15 well-off. As Cole expected, the group of well-off kids showed a healthy immune response, with elevated activity among genes that control pulmonary inflammation. The poorer kids showed busier inflammatory genes, sluggishness in the gene networks that control inflammation, and—in their health histories—more asthma attacks and other health problems. Poverty seemed to be mucking up their immune systems.</p>
+
+			<p>Cole, Chen, and Miller, however, suspected something else was at work—something that often came with poverty but was not the same thing. So along with drawing the kids’ blood and gathering their socioeconomic information, they showed them films of ambiguous or awkward social situations, then asked them how threatening they found them.</p>
+
+			<p>The poorer kids perceived more threat; the well-off perceived less. This difference in what psychologists call “cognitive framing” surprised no one. Many prior studies had shown that poverty and poor neighborhoods, understandably, tend to make people more sensitive to threats in ambiguous social situations. Chen in particular had spent years studying this sort of effect.</p>
+
+			<p>But in this study, Chen, Cole, and Miller wanted to see if they could tease apart the effect of cognitive framing from the effects of income disparity. It turned out they could, because some of the kids in each income group broke type. A few of the poor kids saw very little menace in the ambiguous situations, and a few well-off kids saw a lot. When the researchers separated those perceptions from the socioeconomic scores and laid them over the gene-expression scores, they found that it was really the kids’ framing, not their income levels, that accounted for most of the difference in gene expression. To put it another way: When the researchers controlled for variations in threat perception, poverty’s influence almost vanished. The main thing driving screwy immune responses appeared to be not poverty, but whether the child saw the social world as scary.</p>
+
+			<p>But where did that come from? Did the kids see the world as frightening because they had been taught to, or because they felt alone in facing it? The study design couldn’t answer that. But Cole believes isolation plays a key role. This notion gets startling support from a 2004 study of 57 school-age children who were so badly abused that state social workers had removed them from their homes. The study, often just called “the Kaufman study,” after its author, Yale psychiatrist Joan Kaufman, challenges a number of assumptions about what shapes responses to trauma or stress.</p>
+
+			<p>The Kaufman study at first looks like a classic investigation into the so-called depression risk gene—the serotonin transporter gene, or SERT—which comes in both long and short forms. Any single gene’s impact on mood or behavior is limited, of course, and these single-gene, or “candidate gene,” studies must be viewed with that in mind. Yet many studies have found that SERT’s short form seems to render many people (and rhesus monkeys) more sensitive to environment; according to those studies, people who carry the short SERT are more likely to become depressed or anxious if faced with stress or trauma.</p>
+
+			<p>Kaufman looked first to see whether the kids’ mental health tracked their SERT variants. It did: The kids with the short variant suffered twice as many mental-health problems as those with the long variant. The double whammy of abuse plus short SERT seemed to be too much.</p>
+
+			<p>Then Kaufman laid both the kids’ depression scores and their SERT variants across the kids’ levels of “social support.” In this case, Kaufman narrowly defined social support as contact at least monthly with a trusted adult figure outside the home. Extraordinarily, for the kids who had it, this single, modest, closely defined social connection erased about 80 percent of the combined risk of the short SERT variant and the abuse. It came close to inoculating kids against both an established genetic vulnerability and horrid abuse.</p>
+
+			<p>Or, to phrase it as Cole might, the lack of a reliable connection harmed the kids almost as much as abuse did. Their isolation wielded enough power to raise the question of what’s really most toxic in such situations. Most of the psychiatric literature essentially views bad experiences—extreme stress, abuse, violence—as toxins, and “risk genes” as quasi-immunological weaknesses that let the toxins poison us. And abuse is clearly toxic. Yet if social connection can almost completely protect us against the well-known effects of severe abuse, isn’t the isolation almost as toxic as the beatings and neglect?</p>
+
+			<p>The Kaufman study also challenges much conventional Western thinking about the state of the individual. To use the language of the study, we sometimes conceive of “social support” as a sort of add-on, something extra that might somehow fortify us. Yet this view assumes that humanity’s default state is solitude. It’s not. Our default state is connection. We are social creatures, and have been for eons. As Cole’s colleague John Cacioppo puts it in his book Loneliness, Hobbes had it wrong when he wrote that human life without civilization was “solitary, poor, nasty, brutish, and short.” It may be poor, nasty, brutish, and short. But seldom has it been solitary.</p>
+
+			<p>“A cell,” Steve Cole said, clasping some amberjack, “is a machine for turning experience into biology.”</p>
+
+			<p>TOWARD THE END OF the dinner I shared with Cole, after the waiter took away the empty platters and we sat talking over green tea, I asked him if there was anything I should have asked but had not. He’d been talking most of three hours. Some people run dry. Cole does not. He spoke about how we are permeable fluid beings instead of stable unitary isolates; about recursive reconstruction of the self; about an engagement with the world that constantly creates a new you, only you don’t know it, because you’re not the person you would have been otherwise—you’re a one-person experiment that has lost its control.</p>
+
+			<p>He wanted to add one more thing: He didn’t see any of this as deterministic.</p>
+
+			<p>We were obviously moving away from what he could prove at this point, perhaps from what is testable. We were in fact skirting the rabbit hole that is the free-will debate. Yet he wanted to make it clear he does not see us as slaves to either environment or genes.</p>
+
+			<p>“You can’t change your genes. But if we’re even half right about all this, you can change the way your genes behave—which is almost the same thing. By adjusting your environment you can adjust your gene activity. That’s what we’re doing as we move through life. We’re constantly trying to hunt down that sweet spot between too much challenge and too little.</p>
+
+			<p>“That’s a really important part of this: To an extent that immunologists and psychologists rarely appreciate, we are architects of our own experience. Your subjective experience carries more power than your objective situation. If you feel like you’re alone even when you’re in a room filled with the people closest to you, you’re going to have problems. If you feel like you’re well supported even though there’s nobody else in sight; if you carry relationships in your head; if you come at the world with a sense that people care about you, that you’re valuable, that you’re okay; then your body is going to act as if you’re okay—even if you’re wrong about all that.”</p>
+
+			<p>Cole was channeling John Milton: “The mind is its own place, and in itself can make a heaven of hell, a hell of heaven.”</p>
+
+			<p>Of course I did not realize that at the moment. My reaction was more prosaic.</p>
+
+			<p>“So environment and experience aren’t the same,” I offered.</p>
+
+			<p>“Exactly. Two people may share the same environment but not the same experience. The experience is what you make of the environment. It appears you and I are both enjoying ourselves here, for instance, and I think we are. But if one of us didn’t like being one-on-one at a table for three hours, that person could get quite stressed out. We might have much different experiences. And you can shape all this by how you frame things. You can shape both your environment and yourself by how you act. It’s really an opportunity.”</p>
+
+			<p>Cole often puts it differently at the end of his talks about this line of work. “Your experiences today will influence the molecular composition of your body for the next two to three months,” he tells his audience, “or, perhaps, for the rest of your life. Plan your day accordingly.”</p>
+		</div>
+		<div title="James Brown" class="copy" id="james-brown">
+			<p>By Sean Flynn, for GQ</p>
+			<p>The day he buried his mama in the big cemetery on Laney Walker Boulevard, in the row where he'd buried his daddy and his third wife, too, James Brown draped an arm around Roosevelt Royce Johnson's shoulders and pointed at a plot of unturned earth.</p>
+
+			<p>"Well, Mr. Johnson," he said, "that's my spot right there. What you gonna put on my headstone?"</p>
+
+			<p>Johnson grunted. Mr. Brown talking foolish, headstones and all that. Like he might actually die someday. What's a man supposed to say to that?</p>
+
+			<p>He'd known Mr. Brown almost his whole life, since he was a boy, 12 years old, fetching coffee for the disc jockeys at WJMO 1490, a soul station in Cleveland. The jocks knew Mr. Brown because Mr. Brown made it his business to know the people who could play his records on the radio and keep making him rich. He'd check in with them when he came to town, hang out for a while. Easy promotion, just James Brown working, always working, at being James Brown.</p>
+
+			<p>That's how Roosevelt met Mr. Brown, through the deejays, in the mid-'60s. They told him they were going to meet a man, take him shopping, asked Roosevelt if he wanted to come. He thought it was odd when the jocks drove out to Burke Lakefront Airport. No stores out there. But there was a private plane. The hatch opened, and a little man with an improbable swoop of hair climbed down the steps. A black man. Blew Roosevelt's mind. A black man with his own plane. Damn.</p>
+
+			<p>Mr. Brown asked him his name, and he said, "Roosevelt, sir."</p>
+
+			<p>"Oh, you got manners," Mr. Brown said. Manners were important to Mr. Brown.</p>
+
+			<p>Then they all went to King's Menswear so Mr. Brown could buy some silk shirts. "Stay with me," he told Roosevelt, "and hold my coat." Which he did. Mr. Brown gave him four $20 bills that day, and whenever he came back to Cleveland to play Gleason's or the arena downtown, he'd send someone to find that polite kid who'd held his coat. That's what Roosevelt Johnson did for years, hold Mr. Brown's coat.</p>
+
+			<p>When he got older, Mr. Brown put him on a Greyhound with a crate of records to hump around to R&B stations, and when he got older still, Mr. Brown took him on tour. ROOSEVELT ROYCE JOHNSON, his business cards read. PERSONAL ASSISTANT TO MR. BROWN. Johnson would lay out Mr. Brown's pajamas at night and iron his clothes in the morning and make sure he had an aspirin with his breakfast and fifty milligrams of Viagra before every show. ("It wasn't a sex thing," Johnson says. "He thought it gave him extra energy.") He bought Mr. Brown weed in Amsterdam, and he brought Mr. Brown Gatorade when his legs cramped in the morning. He traveled the world with Mr. Brown and sang backup, too, right onstage with the Godfather himself.</p>
+
+			<p>By the time Susie Behling Brown was laid to rest in the winter of 2004, Johnson had been with Mr. Brown for forty years. Mr. Brown was an old man by then, almost 71. His hair was bone white under the black dye, and he had cancer on his prostate and sugar in his blood. But he was still working, still touring, still paying Johnson $3,300 every week on the road.</p>
+
+			<p>What you gonna put on my headstone?</p>
+
+			<p>"I'm not gonna put nothin' on it," Johnson said. "I'm gonna let you put something on mine, 'cause I'm gonna leave you behind."</p>
+
+			<p>Which didn't happen, obviously, because Roosevelt Johnson is still here to tell stories about Mr. Brown, who up and died not quite three years after his mama, on Christmas Day 2006. But there's nothing on his headstone, because there is no headstone. Mr. Brown is not buried in the big cemetery on Laney Walker Boulevard, nor is he in the shade of the oak trees next to his South Carolina mansion or in the red clay on the slope above his pond.</p>
+
+			<p>More than a year after he passed, Mr. Brown is in a temporary crypt surrounded by a fence outside the house in South Carolina where one of his daughters lives. "Like a pet," Johnson says. "That's something you do with a dog—put it in the backyard."</p>
+
+			<p>Except Mr. Brown is actually in the front yard. A minor point. But really, it's been that kind of year.</p>
+
+			<p>···
+			James Brown was not expecting to die when he did. He was 73 years old, with a wheezing chest and swollen feet, but the man wasn't ready to retire. He was going back on the road: New Year's Eve at B. B. King's place in Manhattan, then up to Ontario, west to British Columbia, down to Anaheim in February. Before the tour, in late December, he went to get a new set of bottom teeth screwed into his jaw, but a doctor heard that wheeze and sent him to the hospital. Thirty-six hours later, before dawn broke Christmas morning, his heart petered out.</p>
+
+			<p>Yet Mr. Brown was not wholly unprepared to die, either. Several years earlier, in August 2000, he'd drawn up a will in which he bequeathed his "personal and household effects"—his linens and china and such—to six adult children from two ex-wives and two other women. He was very clear, too, that those were the only heirs he intended to favor. "I have intentionally failed to provide for any other relatives or other persons," he wrote in the will. "Such failure is intentional and not occasioned by accident or mistake."</p>
+
+			<p>Everything else he owned, including his sixty-acre estate in Beech Island, South Carolina, and his catalog of 800 or so songs, was to remain in a trust, which in turn was divided into two funds: one to educate his grandchildren (seven among those six named children, plus the daughter of his son Teddy, who died in 1973) and a much larger one to pay tuition for "financially needy" students who attend school in South Carolina or Georgia. How much is that trust worth? Hard to say, because Mr. Brown's best assets are of a sort that can be marketed and managed in perpetuity as opposed to simply liquidated for cash. But the lowball estimate is $20 million, which, with proper promotion, could be multiplied many times over for many years to come. Elvis has been dead for three decades, after all, and he's still pulling eight figures annually.</p>
+
+			<p>In other words, Mr. Brown left a fortune to poor strangers.</p>
+
+			<p>Fifteen months later, none of those poor strangers have seen a nickel. Nor will they for months, and more likely years, to come, by which point there may be little left, after the creditors and the lawyers are paid. The first attorney was hired barely thirty-six hours after Mr. Brown died, and the first legal challenge was initiated less than two weeks after that. The lawsuits and lawyers rapidly multiplied—there are now more than thirty lawyers suing in three different courts—which has had the predictable result of resolving...precisely nothing.</p>
+
+			<p>For such a simple little will—all of five pages, and mostly boilerplate at that—there are a stupefying number of issues to resolve.</p>
+
+			<p>Mr. Brown's ostensible widow and the mother of James Brown II wants at least a third and perhaps half of his riches—though, as a matter of law, she is almost certainly not his widow nor, as a matter of human physiology, the mother of his biological child. Five of the six children named in the will want the trust dissolved and the will invalidated, which would entitle them to equal shares of the entire estate; that puts them at odds with the sixth sibling, Terry, and his boys, Forlando and Romunzo, who want the will and educational trusts to stand. At least two other daughters whom Mr. Brown never acknowledged also want a share of the pot, as well as eighteen years of back child support. Four more potential children—Jane and John Does I, II, III, and IV in the court records—might have similar claims. The three men Mr. Brown named as trustees have resigned, though two of them, Albert H. "Buddy" Dallas and Alford Bradley, want to be reinstated, because they say a judge bullied them into quitting. That same judge, Doyet Early, wants to put the third former trustee, David Cannon, in jail for not repaying $373,000 in misappropriated funds. Cannon says he can't afford it, which looks bad considering he spent almost $900,000 in cash to build a house in Honduras last year. State investigators are working a criminal case on Cannon, too. The two special administrators Judge Early appointed to replace those three men, meanwhile, are being sued in federal court by Forlando Brown, who argues that they were illegally put in charge and are improperly attempting to shift assets from the trust to the estate, from which their $300-an-hour fees could be paid. The administrators, Adele J. Pope and Robert Buchanan, have in turn sued Bradley, Cannon, Dallas, entertainment lawyer Joel Katz, his firm (Greenberg Traurig), and Enterprise Bank in state court, alleging a years-long conspiracy to swindle millions from Mr. Brown. All of those people have lawyers, and many of them have more than one. Tomi Rae Hynie, the widow who's probably not technically a widow, has five. Her son has his representative, a guardian ad litem, and the guardian ad litem has his own lawyer. Pope and Buchanan have lawyers. Even the anonymous beneficiaries of the trust, all those needy and deserving would-be students, have a lawyer—the attorney general of South Carolina—and they used to have two until Judge Early tossed out the Georgia attorney general.</p>
+
+			<p>And those are the relatively dignified legal proceedings.</p>
+
+			<p>Outside the courtroom, the family has bickered over absolutely everything, including the disposition of Mr. Brown's body, which for a time was kept in a gold-plated coffin inside a climate-controlled room in his house. When it was finally decided that the corpse would be put in a crypt in daughter Deanna's yard in early March, daughter Yamma nearly missed the private ceremony because police in Atlanta had arrested her the night before for stabbing her husband in the arm with a butcher knife. Since then, Forlando Brown has accused those two aunts, Deanna and Yamma, of swiping mementos, checks, and tens of thousands in cash from his grandfather's house, and in court he called their lawyer—who used to be his lawyer—a liar and a forger, or at least an accomplice to forgery. Yamma, Deanna, and half-brother Daryl accused the former trustees of hunting for "certain assets" when the trustees photographed the woods around Mr. Brown's house, an obvious reference to cash Mr. Brown is believed to have buried in the yard. Tomi Rae Hynie, who prefers to be called Mrs. Brown, was locked out of the house, and she insists someone—the adult children or the former trustees, or a combination thereof—shredded more recent wills, which she believes left half of Mr. Brown's assets to her and her son, and took all of her jewelry and most of Mr. Brown's clothes. "They looted everything," she says. "You're dealing with nothing but liars and thieves and cheats who would throw a widow and a 6-year-old child out on the streets." She also believes, along with several other people, that Mr. Brown was killed, though by whom and how neither she nor anyone else will say. "I can't comment on that right now," she says, "for the safety of myself and my son." Even the lawyer who drew up the will and trust that are now being contested is a tawdry little sideshow: He's in prison for the 2006 murder of a strip-club manager who'd bounced him for nakedly masturbating while waiting for a $300 lap dance.</p>
+
+			<p>Wait, there's more.</p>
+
+			<p>There are claims against the estate from creditors and would-be creditors. The funeral home wants $17,995 for the programs it produced for the services. One of Mr. Brown's managers wants a $200,000 cut of royalties he was promised. Buddy Dallas would like $624,876 in fees he says he was shorted over seven years. The Pullman Group, to which Mr. Brown mortgaged his royalties in 1999, wants $31 million (the refinancing of that deal is the subject of yet another lawsuit). A doctor wants $8,500 to reimburse her for, among other things, all the times she packed Mr. Brown into a limo to rehab in Atlanta; she'd like an additional $14,000 for two African carvings he never returned to her, or failing that, the carvings. Roosevelt Johnson, too, would like to get paid. "We were always told by Mr. Brown we would be taken care of should anything happen to him," he wrote in his claim. "We, meaning myself, and his group should have at least got two weeks severance pay. Myself for over 30 years of faithful service should get 2.5 million for a lifetime of service as he promised."</p>
+
+			<p>Maybe Mr. Brown did make that promise. But he never put it in writing, and it probably wouldn't have mattered if he had. Somebody surely would've sued.</p>
+
+			<p>···
+			Buddy Dallas met James Brown in 1984 at a political reception in Augusta, Georgia. It was a brief and unremarkable encounter—Dallas mostly remembers that his 2-year-old daughter liked the little man with the funny hair—but the next day, the phone rang in Dallas's office. It was Mr. Brown.</p>
+
+			<p>"Mr. Dallas," he said, "I need you to represent me."</p>
+
+			<p>"But Mr. Brown," Dallas replied—it was somehow automatic that James Brown was Mr. Brown—"I don't know anything about the entertainment business."</p>
+
+			<p>"That's all right," he said. "I'll teach you about the entertainment business. But I need you to represent me now."</p>
+
+			<p>Mr. Brown's immediate problems didn't involve entertainment. Mainly, he was broke. He hadn't broken the Billboard 100 in seven years, and he was playing shows for $7,500 that cost him $9,500 to produce. The IRS wanted $20 million in back taxes and penalties, the phone company had cut his line, and the founder of the Sacramento chapter of his fan club was after him for child support. "Mr. Dallas," he said a week after they'd met, "I hate to ask you this, but I really, really need some money."</p>
+
+			<p>So the first thing Dallas did as Mr. Brown's lawyer was give him $12,000, two grand in cash, the rest in checks paid to his creditors. Less than a year later, Dallas put up his own Lincoln as collateral for another $18,000.</p>
+
+			<p>The second thing he did was straighten out the child-support mess in Sacramento. "Mr. Brown," Dallas told him when the paperwork was settled, "you're going to have to be more careful."</p>
+
+			<p>"Well, Mr. Dallas," he said, "we're not going to have to worry about that no more."</p>
+
+			<p>What he meant was there wouldn't be any future paternity suits: Mr. Brown told at least six people he'd had a vasectomy earlier that year. But that was too little and much too late: One reason his estate is such a disaster is that he left so many heirs who could lay claim to his wealth.</p>
+
+			<p>His first wife, Velma, bore three sons in the 1950s, of whom two survive, and a backup singer had a fourth boy. Another singer gave birth to a daughter in 1965, and his second wife, Deidre, had two girls, one in 1968 and the other in 1972. The fan-club woman in Sacramento had her son in 1968.</p>
+
+			<p>That's seven children from five women.</p>
+
+			<p>And those five women are like grains of sand on a very wide beach. Mr. Brown had an insatiable appetite for women that was at least as pathological as it was sexual. "You'd have to grow up in a whorehouse to understand how James Brown felt about women," one of his confidants says, which is apt because Mr. Brown did, in fact, grow up in a whorehouse. His mother walked out on his father when he was 4, and two years later, he was sent to live in his aunt Honey's brothel in Augusta. He shined shoes for the soldiers from Fort Gordon, danced for nickels and pennies they'd flip at his feet, watched them shamble into Aunt Honey's to fuck the women, watched them shuffle back out.</p>
+
+			<p>When Mr. Brown grew up, when he was a famous performer touring the world forty, fifty weeks a year, he fucked a lot of women. That is a deliberate term, fucked, because Mr. Brown was not a man who made love or even had sex. Mr. Brown fucked. "He did not know about the soft," a longtime friend says. A lot of times, he'd let one of his cronies deal with the preliminaries, make small talk with a girl, get her a drink, keep her company. "She ready?" he'd ask. "I ain't got no time now. Make sure she ready." He'd hop on, roll off. Straight missionary, straight to the point. He never saw a reason for much else. "Why's a white man eat a woman?" he once asked a white friend. "What's he get outta that?" Hell, the man was in his sixties before he discovered doggy style on the Playboy Channel. He called up Roosevelt Johnson at three in the morning to tell him about it. "You sittin' down, Mr. Johnson?" he asked, which is what he always said when he had an astonishing new fact to report. "Black man don't know nothing. Black man don't know a damned thing. A white man, he get up in his woman from behind." Johnson pretended to be surprised by that. ("You had to go there with him," he says, "because you didn't know anything Mr. Brown didn't know.")</p>
+
+			<p>So how many women? How high can you count? Mr. Brown always kept a few girlfriends on the side, some for decades, and he always found a woman or two in whatever city he happened to be playing. "There'd be times, literally, when one would be coming in the front door while another one was going out the back," says Buddy Dallas.</p>
+
+			<p>Naturally, some of them got pregnant.</p>
+
+			<p>In 1961, there was a groupie named Ruby Mae Shannon, from Houston, who gave birth that December to a daughter, LaRhonda.</p>
+
+			<p>In 1968, there was a pretty white 17-year-old hippie named Lea Mernickle. She was standing in line to buy a photograph after a show in Vancouver when Mr. Brown sent one of his men to go fetch her. "Do you want to meet Mr. Brown?" he asked. Which was a silly question, because really, who didn't want to meet Mr. Brown? She followed the man backstage, and Mr. Brown greeted her warmly. "He seemed to be smitten with me," she says. He invited her to fly to Los Angeles with him that night. She said no—her mother would've killed her, disappearing like that—but when he asked her a few days later to fly to Denver, she went. "I was always thinking the best of people," she says. "And my head was in the stars. I was going to hang out with James Brown. How groovy is that?" And it was, except for, as she puts it, "the part I wasn't particularly thrilled about." She flew home pregnant and in October had a baby girl with skin the color of cinnamon, which is what she named her, Cinnamon Nicole Mernickle.</p>
+
+			<p>In 1970, there was a woman named Christine Mitchell, whom he culled from the audience at a show in Miami. She gave birth to yet another daughter, Jeanette.</p>
+
+			<p>That's ten children so far. Four more—at least four more—are awaiting DNA results. The laws of probability suggest there are others ("Let's hope this thing doesn't spread to Europe," Dallas says), but how many, nobody knows. "My dad would send his hounds to pay women to get rid of the babies or pay them not to talk about it," says La-Rhonda, Ruby Shannon's daughter. "My mom wouldn't settle for it. I used to ask her why, and she would say, 'Because he's a friend.' "</p>
+
+			<p>···
+			One of Mr. Brown's hounds intercepted Lea Mernickle backstage in the summer of 1968, when he was in Vancouver for another show and she was obviously pregnant and trying to find him to tell him. The man—maybe a lawyer, maybe a bodyguard—asked a lot of questions, "accusatory questions," about her baby. Was she sure Mr. Brown was the father?</p>
+
+			<p>"The only thing I want to know," she told the man, "is does he want to know his daughter, does he want to see her, does he want a relationship with her?"</p>
+
+			<p>No.</p>
+
+			<p>She got paid a couple of thousand dollars, and because Lea was a minor when she got pregnant, her mother signed an affidavit saying Lea had never had sex with Mr. Brown or anyone in his entourage. And that was it.</p>
+
+			<p>Not long after Cinnamon was born, Lea married a man of Danish descent and moved to the Okanagan Valley, east of Vancouver, where she had three sons, all blue-eyed and blond. And when she was young, Cinnamon—who was called Nikki as a child and now Nicole as an adult—believed she was Danish, too. "If you'd asked me," she says, "my ancestors were Vikings."</p>
+
+			<p>But the white kids in the valley—which would have been all the kids in the valley—were merciless. They made fun of her hair, the kinks she combed out with Vaseline. They said her brothers couldn't be her real brothers, and when she asked her mother if that was true, Lea admitted it was. "Your real father was a famous singer," she said. Maybe she said James Brown, but Nicole had never heard of him. Later, though, when an uncle gave her a copy of Papa's Got a Brand New Bag, she would stare at his face on the cover. She knew that man was her daddy.</p>
+
+			<p>Not that it made her feel any better. "I was different, and being different sucked," Nicole says. The white kids said she was black, and when one black family finally moved to town, those kids said she wasn't black enough. In the fifth grade, one of those black girls yanked Nicole off her bike and slapped her. "Stop lying," she said. "James Brown ain't your daddy."</p>
+
+			<p>The problem, she decided, was that James Brown simply couldn't find her. That had to be it. Why else would a man abandon his little girl? "I was believing he didn't know I was alive," she says. "He just needed a message, and then he would come and rescue me." He never did, though, even after Lea's marriage broke up and she moved her children to Vancouver and had to collect welfare to get by.</p>
+
+			<p>So what's that worth, now that he's dead, all those years of being different and feeling abandoned? Is there a debt owed? One that is even possible to repay?</p>
+
+			<p>Nicole never asked for anything while Mr. Brown was alive. But in the mid-'90s, after she'd been divorced and had two children of her own, she did try to meet him. She started making phone calls, which eventually led her to Buddy Dallas. She told him she didn't want money, only to meet her father. It took a while, but Dallas arranged a conference call between himself, Mr. Brown, and Nicole.</p>
+
+			<p>Mr. Brown was polite when he answered. Always with the manners. Nicole got to the point: "Do you have any doubt that I'm your flesh and blood?"</p>
+
+			<p>"Yeah, I have doubts," Mr. Brown said. "You ain't my child. Somebody lyin' to you, 'cause I ain't your daddy. If you is my daughter, I'd want to hug you and tell you I love you and meet your kids. But you ain't my child."</p>
+
+			<p>The conversation lasted all of three minutes. She never spoke to him again, and she saw him only once, from the eighth row of a Vancouver auditorium in 2004. The way she tells it now, there was a moment, in the middle of "It's a Man's Man's Man's World," where he seemed like he saw her in the audience, like he was staring at her from the stage. "He just had this mean look," she says. "Like, I hate you."</p>
+
+			<p>Probably just her imagination. James Brown wouldn't have recognized his daughter. And maybe that's why Nicole saw a man who looked so mean. He never gave her a reason to see anything else.</p>
+
+			<p>···
+			And what about LaRhonda? Does she have anything coming?</p>
+
+			<p>She was 4 years old, playing mud cakes in the yard, when her mother called her inside and put her in front of the TV. "I want you to see something," she said. There was a black man singing on the screen. "That's your daddy."</p>
+
+			<p>"That ain't my daddy," LaRhonda said. Then she went back to her mud cakes.</p>
+
+			<p>For years after that, whenever Mr. Brown played Houston, Ruby Shannon would dress up her daughter and take her to the arena, LaRhonda grousing the whole time about having to see some old man's show. She never believed that man was her daddy. For a long time, she wasn't even sure Ruby was her mother, what with the woman working two jobs to pay the bills, leaving LaRhonda to be raised by her great-aunt.</p>
+
+			<p>Then, when LaRhonda was 11, her mother dragged her to yet another show, and she stood outside afterward, by the stage door, waiting for an autograph. It was late, two in the morning, maybe three, before he finally came out, because Mr. Brown had to wipe off the sweat and put on fresh clothes and roll his hair all over again before he'd walk outside. The man liked to stay in character, and the character always looked good.</p>
+
+			<p>He recognized LaRhonda in the crowd from seeing her at all those other shows with Ruby. He went straight to her, asked where her mother was. LaRhonda pointed off to one side. She watched Mr. Brown go to Ruby, watched him pick her up and twirl her around. And for the first time she thought, Maybe he is my daddy.</p>
+
+			<p>Ruby died in 1975 at 40, a heart attack after surgery. LaRhonda tried for months to tell Mr. Brown. She finally tracked him to a hotel in Birmingham and got through the switchboard by saying her name was Ruby Mae Shannon.</p>
+
+			<p>Mr. Brown got on the line. He was sweet. "Hey, baby," he said. "What's goin' on?"</p>
+
+			<p>LaRhonda started sobbing. She told him who she was, told him Ruby was dead.</p>
+
+			<p>"What you calling me for? I ain't your daddy."</p>
+
+			<p>He said that, Mr. Brown did, to his 13-year-old daughter.</p>
+
+			<p>"That daddy I always thought was gonna come home," LaRhonda says now, "that was gonna come running and pick me up and hug me and kiss me, that daddy I thought was gonna be like, 'Okay, her mom's passed, I'll take her in'—that daddy never came."</p>
+
+			<p>But LaRhonda kept coming back. "Like a canker sore," she says. She'd go to his shows in Houston, find someone to let her backstage. The first time, she was 16, and Mr. Brown just stared at her. He warmed to her as the years went by, or at least thawed some. "Me and your mama was friends," he told her once. "Your mama was built like a Coke bottle," he told her more than once. When she was 19, she took her own daughter, Ciara, backstage, and Mr. Brown held the baby on his lap and called her his granddaughter.</p>
+
+			<p>"If she's your granddaughter," one of his backup singers said, "then who's her mama?"</p>
+
+			<p>Mr. Brown scowled. "Ain't nobody asked you nothin'." He turned to the Reverend Al Sharpton, who was close to Mr. Brown in those days. "Reverend, you're a man of the cloth. Tell the truth: She look like me?"</p>
+
+			<p>"I am a man of the cloth," Sharpton said. "And she looks like you spit her out of your mouth."</p>
+
+			<p>Sharpton doesn't recall the conversation, but he says it sounds plausible (especially since LaRhonda does bear a gobsmackingly obvious resemblance to her father). More important, he remembers her clearly. "You mean Peaches?" he says when asked about the daughter in Houston. That's what everyone calls her, Peaches. Her father gave her that name. "She's a Georgia peach," he told Ruby years ago.</p>
+
+			<p>And maybe that's the worst thing: La-Rhonda was never a stranger to the people around Mr. Brown. She knew most of her half siblings, held some of their children in her arms, and she found out Mr. Brown had died when his son Daryl called. "Pop's dead," he told her. Even Tomi Rae Hynie, the (maybe) widow, knows Peaches. "And Peaches," she says, "is his daughter."</p>
+
+			<p>So again, what's that worth, now that he's dead and LaRhonda has a letter from a DNA lab that says there is a 99.99 percent probability that James Brown is her father? Is there a debt owed?</p>
+
+			<p>Perhaps. If the trust stands, both LaRhonda's and Nicole's children would appear to be legitimate beneficiaries of the grandchildren's educational fund. If the will and trust are invalidated, they might be in line for a fraction of what's left after the creditors and lawyers are paid. Their own lawyers have filed for back child support—though ironically, if the will is valid, that likely would be futile, since almost all of Mr. Brown's assets would be in the trust, not the estate. Blood from a stone and all that.</p>
+
+			<p>Mostly, though, there is the name: James Brown. Because that name represents both validation for his children and a rebuke toward their father. To have that name says that lawyers and lab techs did in his death what James Brown would not do in his life: acknowledge his children. "And I want people to know," Nicole says, "that he did not acknowledge me."</p>
+
+			<p>All things considered, that is not an unreasonable request.</p>
+
+			<p>···
+			Roosevelt Johnson's request, on the other hand, is not at all reasonable. He would like $2.5 million, which is a number he appears to have pulled out of his hat.</p>
+
+			<p>It's an unfortunate number, too, because it makes Johnson look greedy when he is merely desperate. The man's broke. A few months ago, he would've been content with a lousy $1,200, enough to get his landlord off his back and keep his small apartment in a shabby tower on the Lake Erie shore. He's sold his cars and his jewelry, and he's been trying to find work, any work. "But people look at your résumé and what you've been doing for the past forty years, and they think, This guy doesn't really want a job," he says. "Yeah, I do. My job died."</p>
+
+			<p>He never saw it coming, either. When Johnson stood in the big cemetery on Laney Walker Boulevard in the winter of 2004, part of him really believed he'd be the one leaving Mr. Brown behind. Yes, he was twenty years younger than his boss, and he knew Mr. Brown aged like any other man, but Mr. Brown, the flesh-and-blood mortal, was not the same as James Brown, the Hardest-Working Man in Show Business, the character and icon. James Brown was—is—immortal. Any man could confuse the two, the person and the persona, and not even know his mind was playing tricks on him.</p>
+
+			<p>Mr. Brown came from nothing, a poor black son of the Depression South. His father made a pauper's living slicing trees for sap he could haul on his back to the turpentine plant in Bamberg, and little James's clothes were so raggedy, the teachers sometimes sent him home from school. He started stealing so he could buy something decent to wear, and when he got caught breaking into cars at 15, a judge gave him eight to sixteen years in prison. But he had a gift. The other inmates called him Music Box on account of his voice, his ear for harmonies and chords, the way he could arrange a gospel quartet into a sound so sweet men would weep. He told the parole board he'd sing for the Lord if they'd let him loose, which they did in 1952, three years and a day into his sentence.</p>
+
+			<p>That's how it started, a 19-year-old ex-con singing gospel in a little town called Toccoa in the hills northeast of Atlanta. He charted his first hit, "Please Please Please," in March 1956, another hundred by April 1974, and twenty-eight more before his last, "Living in America," reached number four on the pop charts in 1986. He sold tens of millions of records and earned hundreds of millions of dollars, and yet his commercial success was less remarkable than his cultural influence. James Brown changed modern music. He put the beat on the One, birthed funk from gospel and soul, laid the foundation (and countless sample tracks) for hip-hop and rap. Long after the hits stopped coming, even after he got busted for smoking angel dust and punching women, people still paid to see him because he was still James Brown. In 2005, when his statue was set on the promenade in the middle of Broad Street in Augusta, near the intersection of James Brown Boulevard and not far from what would become James Brown Arena, Sharpton whispered to him, "You know, Mr. Brown, you've built a brand so high even you couldn't tear it down." He was still Mr. Dynamite, still Soul Brother Number One, still, and always, the Godfather of Soul. Only four B's in music, he liked to say. Beethoven, Bach, Brahms...and Brown.</p>
+
+			<p>Roosevelt Johnson was a part of that phenomenon for forty years. And what's he got now? A job with James Brown didn't come with a pension plan. There was no junior executive waiting to step up, keep the company running. Mr. Brown was the company. Everyone else was merely support staff, temp workers until the boss died.</p>
+
+			<p>So here's what he's got now: One of Mr. Brown's combs. A partial bottle of Mr. Brown's Viagra. A few hundred snapshots of himself with famous people. Some digital recordings of concerts Mr. Brown gave him that might be worth something. And he has a few stories to tell. He peddled one to a tabloid last year about Tomi Rae Hynie supposedly being a lesbian (which she denies). Forty years with a legend and that's what he's reduced to: selling scraps of another man's fame.</p>
+
+			<p>···
+			And why shouldn't he? A dead man's celebrity is a commodity, a resource for anyone willing to stake a claim to it. And a lot of people are. Take, for instance, Tascha Houston, a charming lady of a certain age whom Mr. Brown hired in 1966 as one of the original J. B. Dancers. She uses that exact phrase many, many times. As in, "Mr. Brown told me, 'I want you to keep your part of the legacy alive as one of the original J. B. Dancers.' " As in, "As long as I live, even if I'm in a wheelchair, I will always try to carry on the legacy of the original J. B. Dancers."</p>
+
+			<p>She is not at all insincere. She clearly adored Mr. Brown. He was her best friend and her mentor, she says, and then she has to stop talking because she has begun to cry. She's brought her manager with her, Mr. Marlowe ("Just put Mr. Marlowe," she says. "That's respect"), as well as a few photos from the day she laid a wreath on the James Brown Bridge in Macon, and a folder of official documents from mayors in five cities—Atlanta, Augusta, Philadelphia, Chattanooga, and Lithonia, Georgia—proclaiming various dates to be Tascha Houston Day, primarily in honor of her being an original J. B. Dancer. "I have a person who works on that, to make sure I get the recognition," she explains. "The minute you say James Brown, everyone jumps on it."</p>
+
+			<p>The reason she wants that recognition, of course, is that she still performs. She dances for a James Brown impersonator, and she's choreographed what she calls a one-woman tribute to the Godfather of Soul. "I would like to get it on Broadway," she says.</p>
+
+			<p>LaRhonda, meanwhile, would like to be on TV. "You just don't know," she says. "I am so destined to do a reality show." She has put a great deal of thought into this. All the Brown children, the acknowledged and the alleged, would be sequestered in a big house on an island, where they would wait, one by one and week by week, for a lab technician to compare their DNA to Mr. Brown's. At the end of each episode, one potential heir would be called to a sterile room, where the results would be revealed. "And when they find out they're not his child," she says, "it'd be like, 'Papa's got a brand new bag!Now get your things and get on outta here.' " She jerks her thumb over her shoulder when she says that last part; every decent reality show needs a gesture to go with the catchphrase.</p>
+
+			<p>One sibling she knows would not be kicked off the island is her half sister Nicole. LaRhonda calls her often, and they have exchanged photographs, but she has not traveled to Vancouver, and Nicole has not come to Houston, which genuinely frustrates her. "I can't wait to meet my sister," she says. "On the reality show. Or like, on Oprah. Oh, that'd be one of those moments." And then she's quiet while she dabs the tears out of her eyes.</p>
+
+			<p>A few weeks after LaRhonda sketched her reality show, a woman she calls Auntie Fannie arrived at the Park West Theater in Chicago, where the Chicago Music Awards were being dispensed, wearing a full-length white fur coat with tawny streaks and trailed by two men from Shine On TV, in Augusta, and a filmmaker named Harrison Starks. Fannie had been invited to receive an Award of Honor because, as the program noted, she used to perform "alongside her famous brother, 'The Godfather of Soul' James Brown" and because she is now "sending a positive message through the music she wrote with James Brown before his death."</p>
+
+			<p>The lady at the podium finished announcing the award, and then Fannie Brown bounded onto the stage and began lip-synching to a single she recorded with a few musicians who used to back Mr. Brown. It is called "He's the God Father of Soul, How We Love Him So," and it is obviously not one she wrote with Mr. Brown because it's about him being dead. During the chorus, Fannie did the Robot, and she ended the number by repeating, over and over, "my brother" and "I love you so."</p>
+
+			<p>Then, in quick succession, she plugged her Web site, two other sites where her CDs can be purchased, and I Got Soul, the film Harrison Starks is making.</p>
+
+			<p>Perhaps Fannie does love Mr. Brown. She is clearly distressed by the mess that is his estate. "If he'd left it to me, Michael Jackson, and Prince, we'd never let him down," she says. She lets that hang there while she fans herself, sweaty from the performance. Then: "The love that Michael and I have, oh, from when we was babies..."</p>
+
+			<p>Fannie Brown Buford (she appropriated the name) is not, however, Mr. Brown's sister. He did not have a sister. Still, she's been calling herself that since at least 1993, when she was mentioned in a photo caption in Jet. Yet she is referenced in neither of his autobiographies, and none of Mr. Brown's longtime associates remember her as anything more than an occasional background performer, if that. "You mean the souvenir girl?" one of them says. Yes, the souvenir girl. Fannie says so in her song: I'm loud-talking Fannie / Selling James Brown souvenirs / From Japan to Miami. Also, she sold them at his funeral in Augusta: "Cold Sweat" washcloths, "Hot Pan(t)s" pot holders, that sort of thing.</p>
+
+			<p>As Fannie tells it, she met Mr. Brown when she was 11, in 1967, when he played the Regal Theater in Chicago. "He was sliding onstage, and I was sliding in the aisle," she says. "He did the splits, and I did the splits and a backbend." She caught his eye, and he let her come to wherever he was playing on the weekends during the school year, as much as she wanted when classes were out. She says Mr. Brown essentially raised her (which would make her the only child he raised). And the sister thing? Not her doing. "He said I was his sister." Or like a sister. Or something.</p>
+
+			<p>She believes Mr. Brown's story needs to be told and told properly, which is why she is writing a book and working with Harrison Starks on the film, about which he will reveal very little. "What I'm really worried about is all these phony people like Spike," he says. Starks means Spike Lee, who has for years planned an authorized and well-publicized bio-pic and who, in matters of black cultural icons, is generally not referred to as phony."A lot of people don't know the real history," Starks says. "I do. And the real question is, Who killed James Brown?"</p>
+
+			<p>Fannie Brown is nodding her head. Apparently that is indeed the question.</p>
+
+			<p>"Ain't no one can tell his legacy but me," she says. "He never did anything without talking to me about it." Why bother asking anyone else? "You won't get anything, because everyone you dealing with is liars and druggies. How will you get to the truth when all those people heroined-up and cracked-up and coked-up?</p>
+
+			<p>"History will find the truth," she says. "And when I can find someone to pay for my story, I'm gonna tell the truth."</p>
+
+			<p>···
+			The truth? No one knows the truth about James Brown, not the whole truth, because Mr. Brown never let anyone close enough to reveal the full measure of himself. He could make you believe you were close, make you believe that you, and only you, had been blessed with a glimpse of his soul. But that's merely charisma. Or manipulation.</p>
+
+			<p>"People were his confidant in that area of his life where he was dealing with them," Sharpton says. "All of us—all of us—were consequential to his self-image."</p>
+
+			<p>And that's from a man who was closer than most to Mr. Brown. He toured with him in the 1970s, lived with him for a while in the early 1980s, wrote the introduction to his autobiography. He's called Mr. Brown his surrogate father, and Mr. Brown likened him to a son. Yet he has no illusions, either. He knows he was also a useful prop, a gifted black preacher Mr. Brown could mold and brand as a protégé, help smooth the friction with the civil rights establishment (Mr. Brown, after all, endorsed Richard Nixon). "He saw me as his answer to Dr. King," Sharpton says, and then he drops into a pretty good impersonation: "I'm gonna make my own Dr. King."</p>
+
+			<p>(Decades later, Mr. Brown still saw his reflection in Sharpton. "One of the proudest moments of my life," he told the reverend in 2004, "was when you walked out at the Democratic National Convention with that James Brown hairdo and brought James Brown into mainstream national politics.")</p>
+
+			<p>For all that, Sharpton doesn't claim to have known the total man. "Only tell people what they need to know, Rev," Mr. Brown told him long ago. "And anybody want to know anything outside their lane, don't trust 'em." Mr. Brown trusted Al Sharpton because he stayed in his lane.</p>
+
+			<p>Everyone saw in Mr. Brown only what he let them see. A mistress saw a frustrated old man trying to get hard while whacked out on PCP. His pastor in Augusta saw a spiritual man who quoted Scripture, especially Matthew: "Verily, I say unto you, inasmuch as ye have done it unto one of the least of these, my brethren, ye have done it unto me." Forlando Brown saw a grandfather who read through his college applications and checked his grades every semester. Buddy Dallas saw a captivating performer, an astute businessman, and more than that, a man who survived poverty and prison and drugs and the IRS. We rather die on our feet / Than keep living on our knees / Say it loud / I'm black and I'm proud. That's what Buddy Dallas saw.</p>
+
+			<p>But none of them saw it all. Indeed, you can tell how close someone was to Mr. Brown by how readily they admit that fact.</p>
+
+			<p>"Mr. Brown was an exceptionally slick, conniving, brilliant man," says Charles Bobbit, his friend for forty years and his manager from 1966 to 1977 and again from 2000 until Mr. Brown died. "And he made sure—made sure—he was misunderstood."</p>
+
+			<p>Yet there was one matter on which he clearly wanted to be understood: his legacy.</p>
+
+			<p>Mr. Brown told people for twenty years how he wanted to be remembered. A few small details would change now and again, but his general wishes were consistent.</p>
+
+			<p>For instance, he didn't want his children getting his money. Why depends on who he was talking to and what his mood was at the time. Partly, he was a detached father. Blame the constant touring, blame the multiple divorces, blame whatever demons crawled around his head. "He was never much of a family man," Bobbit says. "But I guess you got that." Sometimes he'd say that being James Brown's child was enough of an inheritance, that the name alone was worth more than anything he had growing up. He worked for his wealth, and they could, too. If he was in a foul mood, he'd be blunter: "They ain't gettin' rich off my back," he told at least four people over the years. "They ain't gettin' a damned dime."</p>
+
+			<p>And that was before two of those children sued him. In the 1970s, when Deanna was 6 and Yamma was 3, he gave them writing credits on two dozen of his records, including "Get Up Offa That Thing," which went to number four on the R&B chart. It was a low-rent scam, a way for Mr. Brown to hide money from the tax man by giving it to his daughters. Twenty-seven years later, Deanna and Yamma wanted their cut of the royalties and demanded $1 million in federal court. (The case was eventually settled for far less.)</p>
+
+			<p>When the suit was filed, Mr. Brown went to the Reverend Larry Fryer, his pastor in Augusta, and the preacher held him while Mr. Brown wept. "He boohooed big time," Fryer says. "Mr. Brown hated that. You can write that: He hated it. 'Cause you suing your daddy. You don't sue your daddy."</p>
+
+			<p>"My daddy never forgot that," says Terry Brown, the son who wants the will left intact. "He said, 'I'll forgive them, 'cause they're my kids and kids do stupid things. But I won't forget.' And you can believe that."</p>
+
+			<p>Or maybe he never forgave. Bobbit says he tried to get him to reconcile with his daughters. "They'll stab you in the back," Mr. Brown said. "Don't trust 'em." Tomi Rae says she tried, too, even gathered them all together for dinner. "I used to beg him," she says. "I used to say, 'Baby, please,' and he'd say, 'Baby, I'll do it for you. But they don't even like you, and they'll stab you in the back.' " When dinner was served, she says, "he got his plate and left the table."</p>
+
+			<p>He was still bitter in late 2006. Four days before he died, Emma Austin, the wife of Mr. Brown's childhood friend Leon, took him a pot of her vegetable soup because she knew he was coughing and swollen and weak. She left it at the guardhouse at the top of the drive, and by the time she got home, Mr. Brown was calling to thank her. They talked for a long while, like they always did, and the conversation drifted to Deanna and Yamma. "Sis"—he always called her Sis—"I will never forgive and I will never forget."</p>
+
+			<p>"Well now, Bro, we're getting to that age where we have to forgive," she said. "We can't get over to the other side holding grudges and not thinking well of people."</p>
+
+			<p>"Sis, I love you," he said. "And I hear you. But I will never forgive."</p>
+
+			<p>···
+			Rather than give his money to his own children, Mr. Brown wanted to leave it to poor kids. He might have been a lousy father, but he had an almost visceral empathy for kids who didn't have decent clothes or enough to eat. Which isn't difficult to understand, because he never forgot what it was like to be one of those kids.</p>
+
+			<p>He never wanted to forget, either.</p>
+
+			<p>The slope above the pond on the east side of his property is barren, an ugly scar of red clay about the size of a football field. Buddy Dallas was always telling him he should get it landscaped, put in some bushes or lay some sod, pretty it up. "Nah, Mr. Dallas," he'd say. "Leave it alone." Instead, he'd send one of the grounds crew up there every so often to drag a harrow over it. The rain would wash the loose dirt into his fishing pond and make an awful mess, but Mr. Brown liked the smell. "Reminds me where I came from," he'd say.</p>
+
+			<p>"He understood the pain of poverty," Fryer says. "How it feels, how it looks. What other people say about you. How hard it is to get out and make something of your life." Fryer is a large man who lives in a small house in a worn Augusta neighborhood not far from the Red Lobster on Walton Way, where he introduced himself to Mr. Brown in 1991, shortly after Mr. Brown got out of prison for running from the police high on PCP. The reverend invited Mr. Brown to church and was his pastor until he died. Fryer was with him when Mr. Brown handed out turkeys and toys, thousands of them, to poor folks at Thanksgiving and Christmas, and he prayed with him at the turkey giveaway in 2006 when Mr. Brown looked so sick the reverend feared the Lord was ready to take him.</p>
+
+			<p>"I don't mean to do Scripture with you," Fryer says. "But I'm a pastor. You knew I would. And Scripture says, what profits a man if he gains the world but loses his soul? That's how it was with me and Mr. Brown. The evidence of his life is that he did not lose his soul."</p>
+
+			<p>And that evidence goes back years. The idea of a trust—specifically, the I Feel Good Trust, which is what the fund meant to send poor kids to college is called—dates at least from 1988, when Mr. Brown performed a charity concert in Augusta to benefit a local children's hospital. The woman who produced the show, a songwriter and singer named Jacque Hollander, made a video about one of the sick kids at the hospital, a little girl with cancer. Near the end of that tape, after Hollander had made a wrenching case for a worthy cause, she announced the creation of "the I Feel Good Children's Trust Fund." Hollander was not acting on a whim. "This was discussed with Mr. Brown and with Buddy Dallas," she says now. "I mean, it was there."</p>
+
+			<p>Well, almost there. Papers to establish the trust were never filed. Yet around the time the tape was made, she sat in an office with Dallas and listened as</p>
+
+			<p>Mr. Brown outlined his plan for it. "I want everything to go into that trust," he said. "My house, my royalties, everything."</p>
+
+			<p>"Mr. Brown," Dallas said. "You've got kids...."</p>
+
+			<p>"Dammit, I ain't giving them a stepping-stone to make history," he snapped. "They all got education. I been supporting them. I ain't givin' them a dime."</p>
+
+			<p>Dallas remembers that conversation almost verbatim, which is notable because Hollander didn't speak to him for twenty years after it took place. And Hollander certainly has no motive to soften Mr. Brown's image now. In fact, she says he raped her later that same year, drove her deep into earlier woods, high on PCP, and told her to take her clothes off. When she refused, he said, "I'm not going to ask you again. And if you don't, I'm gonna." Then he put a shotgun in her face. "He told me, 'If you try to run away, I'll kill you,' " she says. "He told me he owned me. He told me he was giving me a blessing." (She never brought criminal charges, but she later passed two polygraphs, including one administered by a twenty-seven-year veteran of the FBI.)</p>
+
+			<p>Also, she's glad he's dead. "His death was the most unbelievable Christmas present God could have given me," she says. "Is that a horrible thing to say?" Not really, considering. But she does like to believe that Mr. Brown called his fund the I Feel Good Trust because he remembered the first one, that he chose that name to cleanse his sins.</p>
+
+			<p>···
+			In the summer of 2003, Mr. Brown positioned a lawn chair on his front porch, sat down, and told his grandson Forlando to get the broom from the pool house, the blue one with the tattered yellow bristles.</p>
+
+			<p>Then he told him to sweep the lawn. Which Forlando did. Mr. Brown had a way of making people do stupid, humiliating things, like not speak when he was in the room or be cowed into letting him pick their meals in restaurants. Once, when Forlando answered a question with "yeah" instead of "yes, sir," Mr. Brown glowered and pointed toward another room in the house. "Get up," he said. "Go there." Forlando was 17 years old, but he sat in that room, alone and quiet, for three hours. "He demanded respect, and if he didn't get it, you weren't a part of his life," Forlando says.</p>
+
+			<p>So he swept the lawn. Hours passed before Mr. Brown told him to stop. "Now, boy," he said, "that's why you gotta get an education. Because if you don't, people gonna make you do senseless stuff like that. You ain't nothin' without an education."</p>
+
+			<p>Mr. Brown felt that he'd been blessed, that God had given him a voice and rhythm and the charisma to use them. But he never got past the sixth grade. So what if he hadn't been blessed? He probably would have done his full sixteen years for breaking into cars and not much else after that.</p>
+
+			<p>Which is why the I Feel Good Trust was set up as an educational fund. The cause wasn't new to him—"Don't Be a Dropout" broke the top fifty way back in November 1966—but he began to formalize it as his legacy on February 24, 1999. He met that night at his office to sign a will and trust drawn up by H. Dewain Herring, who, before he shot up a strip club and was sent to prison, was a respected South Carolina estate lawyer. Mr. Brown brought a tape deck with him, which he used to record four and a half minutes of musings about his eventual demise. He rambled a bit, but he made three important points:</p>
+
+			<p>Hopefully the legacy will serve as a mentor for young people to make it in all walks of life. This is...let me say this: My intention is not just to go to black kids; this is to go to poor children. And they're not going to limit no color. We've had that, enough of that in America already, and now we're going to begin to move over.
+			And then:</p>
+
+			<p>All the things that I have... I'm James Brown twenty-four hours a day, and that's been proven, even in litigations that I suffered, even in my home, 'cause I was James Brown. So let's not not be James Brown now, now that I'm being paid. I want everything to go down this way.
+			And finally:</p>
+
+			<p>When you get my age, you don't think about nothing but what you can do for people. It's like, it's not what your country can do for you, but what you can do for your country. And I think this is true, which is to the country and mankind throughout the world. That I made it, from God's blessings, in spite of all obstacles, all the ups and downs we had as people, yeah, He's taken me to a point that I can give back, like I prayed before I come here. Nothing is mine anyway; it's all given to me by God. So whatever I do with it, I hope I'm doing His will. Thank you.
+			For whatever reason, he didn't sign those documents until June 15, 1999. A little more than a year later, in August 2000, he signed a revised version. The only significant change was that he made the trust irrevocable.</p>
+
+			<p>···
+			The people who are fighting over Mr. Brown's riches all agree, oddly enough, that he would want much of his wealth to benefit the poor.</p>
+
+			<p>What they disagree on is who is best suited to control Mr. Brown's assets and, more to the point, how much should be given away and who should get the rest. It's all become very nasty and would appear quite complicated, considering the forests of pulp trees slaughtered for legal briefs in the first year alone. But it is really, boiled down, a family feud fought on three fronts.</p>
+
+			<p>One front is Forlando Brown, who wants his grandfather's will and trust left exactly as written. He would then like a group of investors he has assembled to buy out the assets in the trust for a fair-market, court-approved price, which he suspects would be anywhere from $60 million to $100 million. It is not a wholly altruistic offer—the investors, though not Forlando, intend to make a profit—but it would be efficient. Professional marketers could wring more out of Mr. Brown's image and songs than some court-appointed administrator, and they would return a percentage of their annual gross to the trust. The I Feel Good Trust, then, would be flush with cash and would require only the services of a competent money manger.</p>
+
+			<p>Another front is Tomi Rae Hynie. She is suing as the "omitted spouse," which is a legal term meaning Mr. Brown never got around to changing his will to include the woman he married after it was written. Of course, she claims he did revise his will to leave her half of everything, but she can't prove it because she also claims those documents were shredded before she could get into the house to retrieve them. Yet on at least one occasion, in 2006, Mr. Brown had a codicil drawn up by an attorney named Jay B. Ross that would have left her 17 percent. That document also bequeathed 5 percent each to her son, to Roosevelt Johnson, to Mr. Brown's son Daryl, and to his housekeeper and property manager, David Washington. A percentage of what—all of his assets? his royalties?—wasn't clear, except in the case of Charles Bobbit, who was to receive 10 percent of the damages expected from a pending lawsuit against the photo agency Corbis.</p>
+
+			<p>Johnson and Bobbit watched Mr. Brown initial every page and then sign the last. He gave the papers to Bobbit, who put them in his briefcase. A few hours later, Mr. Brown asked for them back. No one ever saw those papers again. Bobbit figures he probably got mad at Tomi Rae and tore them up, which sounds reasonable. Mr. Brown got mad at Tomi Rae a lot. He used to call David Washington from the road, all worked up, saying, "Mr. Washington, pack her clothes. Get her outta there." Then Washington would wait a few hours for him to call again. "Nah," Mr. Brown would say. "I think she gonna be all right. Put her clothes back."</p>
+
+			<p>The real problem Tomi Rae Hynie has, though, is proving she was ever legally Mrs. Brown. She met him in 1997 in Las Vegas, where she was working as a Janis Joplin impersonator, and on June 11, 2001—seventeen years after his vasectomy—she had a son, whom she named James Brown II. Six months later, Mr. Brown married her. Bobbit asked him if he was sure, if he knew what he was doing.</p>
+
+			<p>"When you go home, Mr. Bobbit, there's someone waiting for you," he said. "When I go home, I'm all alone. So yes, I know what I'm doing. I love her, and I'm gonna marry her."</p>
+
+			<p>Unfortunately, Tomi Rae had married a Pakistani man in 1997. She says she was a dupe in a green-card scam, that the marriage was never consummated, and that she tried to get it annulled almost immediately when she discovered her groom had three other wives in Pakistan. But she didn't. Which meant her 2001 marriage to Mr. Brown was invalid, and he never remarried her after she finally did get the annulment in 2004.</p>
+
+			<p>The third front is the five children to whom Mr. Brown left only trinkets. They want the will invalidated and the trust dissolved, arguing in court papers that Mr. Brown was tricked into signing them by Cannon, Dallas, and Bradley. Coupled with the suit filed against those men by the special administrators, Adele Pope and Robert Buchanan—which notes prominently that Mr. Brown "had a limited formal education and relied heavily upon his trusted legal and financial advisors"—it seems to dredge up all those old, ugly images of shady white guys (though Bradley is black) stealing from a dumb black song-and-dance man.</p>
+
+			<p>To be fair, Mr. Brown did, on occasion, lapse into utter lunacy. He was terribly paranoid, convinced the government had bugged the armoire in the den, placed tiny cameras in the curtains, pointed satellites through his window, even wired up the yard. "See them trees," he'd say when the wind blew and the branches swayed. "That's them. They watching me." And he would occasionally flat out lose his mind. "Motherfucker was crazy," says Gloria Daniel, a girlfriend he kept on the side for forty years. "It was the drugs."</p>
+
+			<p>Mr. Brown smoked his drugs—PCP, until that got hard to find, then cocaine—mixed with tobacco from his Kools. "You sitting there rolling tobacco out of a cigarette—that's a woman's job—and you sitting there naked so he can look at you 'cause he getting ready to fuck you," she says. "Yeah, right." She rolls her eyes. The drugs, to say nothing of the diabetes and the prostate cancer, made him impotent. "He tried like hell, though," she says. "He'd wear you out. That man died trying to come."</p>
+
+			<p>One night in the summer of 2001, after he'd slathered her in Vaseline ("He liked you all greased up," she says. "Like a porkchop") and wore her out trying to come, he gave up and left the room, and Gloria dozed off. When she woke up, Mr. Brown was standing at the foot of the bed in a full-length mink coat over his bare chest, a black cowboy hat, and silk pajama pants with one leg tucked into a cowboy boot and the other hanging out. He had a shotgun over his shoulder and a white stripe of Noxzema under each eye. "I'm an Indian tonight, baby," he announced. "C'mon, let's let 'em have it." Then he dumped a pickle jar of change on the floor, told her to get a machete, and went out to the garage. He took the Rolls, drove ten miles to Augusta, weaving all over the road, clipping mailboxes, smoking more dope, and screaming about being an Indian. Gloria kept thinking she should flag down a cop, say she'd been kidnapped.</p>
+
+			<p>Like she says, motherfucker was crazy on drugs.</p>
+
+			<p>When he wasn't high, though, Mr. Brown was firmly in control of his affairs. That's another point upon which all the warring parties—his kids, Tomi Rae Hynie, Forlando—concur. He was suspicious of everyone and kept an eye on all of his business dealings and the people handling them on his behalf. Bobbit used to wonder if he had ESP, the way Mr. Brown could read people. "I can't see how Mr. Brown would know everything going on around him and not know who was ripping him off," he says.</p>
+
+			<p>And if Buddy Dallas and the rest tricked Mr. Brown into signing a bad will and trust, why? "Pretty slick," Forlando says drily, "conning my grandfather into giving his money to poor kids." The alleged motive is that the trust, as well as Mr. Brown's earlier dealings, was structured in such a way as to guarantee enormous commissions to the trustees. But if they were going to steal his money with a bogus will, why not just name themselves beneficiaries and avoid all that paperwork? As for Dallas, whose financial records have been examined, "If there was such a grand conspiracy, why am I worrying about my credit card bills every month?"</p>
+
+			<p>But there's one more thing, and it's important. Buddy Dallas loved James Brown, Mr. Brown loved Buddy Dallas, and there is a long line of people who will testify to that. "Mr. Dallas is a good man," Mr. Brown told Bobbit. "Mr. Dallas didn't even know me, and he gave me $30,000."</p>
+
+			<p>"He always said he'd never forget what Mr. Dallas did for him," David Washington says.</p>
+
+			<p>The courts will maybe, probably, eventually sort all this out. And Dallas will be sitting there, like he was in February and Forlando Brown was on the witness stand. "None of us in this room," Forlando said, "not one of us sang and danced for James Brown. He did that. And I don't think it's right for any of us..." His voice broke. "For any of us to tell my grandfather what to do with his money."</p>
+
+			<p>Dallas was in a chair against one wall, just inside the bar rail, and he had his head down, weeping for his dead friend and the mess his legacy has become.</p>
+
+			<p>···
+			The tour after Christmas was going to be the last one. Mr. Brown would play his final show in Anaheim, then pack it in after fifty-seven years. "When we finish this little thing, we going on a vacation," he'd told Bobbit. He was going to take Tomi Rae and go to San Francisco, a few other towns, spend some money. "Then we going to Vegas, and I'm gonna marry her again. She's my wife, I love her, and I ain't gonna punish her no more."</p>
+
+			<p>But first they had to do the shows, and for that Mr. Brown needed new teeth. Getting implants screwed into the jaw is a brutal procedure, and Mr. Brown didn't think he could stand the pain. He wanted to be put under. But the man was sick. His knees were shot and his feet were swollen, his stomach hurt all the time, he was constipated and couldn't pee too well, either. Now he had a bad cough, and he was losing weight.</p>
+
+			<p>Bobbit was waiting for him when Washington drove Mr. Brown to the dentist in Atlanta. Bobbit had a physician with him who gave Mr. Brown the once-over and then told him he might not ever wake up from anesthesia. He checked him into the hospital that Saturday, December 23. He rested all night and the next day, the doctors checking him, trying to clear out the pneumonia. Bobbit and Washington stayed with him. And then, late Sunday, just before midnight, Mr. Brown told Washington to leave the room.</p>
+
+			<p>"I'm gonna leave here tonight," he said.</p>
+
+			<p>"If you're talking about what I think you're talking about," Bobbit said, "that's a trip I can't make with you." He was trying to lighten the mood, not ready for Mr. Brown to die, not believing he could die.</p>
+
+			<p>Mr. Brown stayed serious. "I want you to look out for my wife, if you can," he said. "And I want you to look out for Little Man, if you can. And look out for Reverend Sharpton."</p>
+
+			<p>He always called Tomi Rae's son Little Man. He knew he wasn't his son, but whenever someone told him to get a DNA test, he said no, not while he was alive. Because he loved Little Man, loved him as his own, almost as if he was finally going to be a proper father, make up for all those years and all those other children. Bobbit thought that's why he called him Little Man. "It was his ego," he says. "Like, 'Look at him, look at that little man—he's just like me.' "</p>
+
+			<p>Bobbit settled into a chair at the foot of the bed. Mr. Brown lay back and dozed. Then he bolted upright, grabbed at his chest. "I'm on fire, I'm on fire," he said. "I'm burning up. Burning up." He flopped across the bed, and his gown rose up, exposing him. Bobbit got a blanket to cover him up. He was leaning down, his face close to Mr. Brown, still holding the blanket. He heard Mr. Brown take three short, weak breaths, saw his eyes open wide for an instant, then close. "As God is my witness, I don't know why," he says, "but I looked at my watch and it was one twenty-four."</p>
+
+			<p>The doctors worked on his body for another twenty-one minutes, but James Brown was already dead.</p>
+
+			<p>···
+			Some nights, when David Washington is asleep, Mr. Brown comes to him. He doesn't like to talk about this, because people tend to think you're crazy when you talk about a dead man visiting you in your sleep. But it's true. It's just the two of them, like it was all those years, Mr. Brown in his bed, Mr. Washington in the chair, watching an old Western on the television.</p>
+
+			<p>"Mr. Washington," he says, "go fix me some corn and bacon." And Mr. Washington gets up and goes to the kitchen and makes the food, puts salt and pepper and butter on the corn, the way Mr. Brown likes it.</p>
+
+			<p>He started working for Mr. Brown in 1994, part-time on the grounds crew after pulling twelve-hour shifts at the textile mill. Mr. Brown found him in the yard one afternoon, asked if he was smoking dope, asked if he was drinking on the job. "No, sir, Mr. Brown."</p>
+
+			<p>"Then why your eyes all red?"</p>
+
+			<p>"I just came from my other job, sir."</p>
+
+			<p>Mr. Brown told him to quit the mill, come work for him full-time. A man shouldn't have to work two jobs, wear himself out like that.</p>
+
+			<p>For the next ten years, Mr. Washington did almost everything for Mr. Brown. He cooked his meals and laundered his clothes and drew his bath. It wasn't always easy, because Mr. Washington never knew what kind of mood he'd be in. "You got used to it," he says. "Don't talk. Just, 'Yes, sir,' 'No, sir.' " He was supposed to be there from nine to five, but he'd stay late, listen to Mr. Brown talk, buy him a carton of cigarettes in the middle of the night, watch Jeopardy! and Wheel of Fortune with him. Mr. Brown didn't have many friends who'd watch TV with him. Mostly, he had people from whom he demanded respect, which isn't the same as a friend at all.</p>
+
+			<p>"He told me a long time ago, all the friends he got he could count on one hand," Mr. Washington says. That's hard on a man, makes him lonely. Sometimes Mr. Washington almost pitied him, though he'd never use that word, because Mr. Brown wouldn't take pity. "He was, like, missing something," Mr. Washington says. "He had everything in the world, but it was like...just something missing. Some kind of happiness."</p>
+
+			<p>Mr. Washington was his friend. And Mr. Brown took care of him, bought him a bedroom set and a burgundy Lincoln, paid for the burial when Mr. Washington's brother died. He told Mr. Washington he was going to buy him a house and maybe a couple of acres on Johnson Lake. Mr. Washington isn't sure where Johnson Lake is, exactly, and it doesn't matter now, anyway.</p>
+
+			<p>He still works at the house. Keeps the place cleaned up, looks after the grounds. Mr. Brown always said he wanted 430 Douglas Drive to be another Graceland, a shrine to the Godfather of Soul. But he's been dead sixteen months now, and Mr. Washington is one of very few people allowed past the gate without a judge's permission.</p>
+
+			<p>Mr. Brown came to him there once, too. About a week after he died, Mr. Washington saw him as he came up the driveway. He was sitting on the front porch, his hands folded in his lap, and Mr. Washington thought, Mr. Brown, get yourself back in the house. You got the pneumonia.</p>
+
+			<p>The driveway sloped down toward the pond, and Mr. Washington lost sight of the house at the bottom of the hill. He climbed the rise on the other side, and Mr. Brown was still there. Then he started to fade, and when Mr. Washington got to the house, it was empty and he was all alone.</p>
+
+			<p>The house is still empty now, and Mr. Brown is in a crypt in his daughter's front yard, lying there like somebody's pet.</p>
+		</div>
 		</div>
 	</body>
 </html>
